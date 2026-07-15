@@ -13,19 +13,89 @@ class AppState extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   String get email => _email;
 
+  // User Profile Statistics (database backed)
+  int _matches = 0;
+  int _winRate = 0;
+  int _powerIndex = 50;
+  int _control = 50;
+
+  int get matches => _matches;
+  int get winRate => _winRate;
+  int get powerIndex => _powerIndex;
+  int get control => _control;
+
   AppState() {
     // Check initial session
     final session = _supabase.auth.currentSession;
     _isLoggedIn = session != null;
     _email = session?.user.email ?? '';
+    if (_isLoggedIn) {
+      fetchUserProfile();
+    }
 
     // Listen to authentication state updates dynamically
     _supabase.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       _isLoggedIn = session != null;
       _email = session?.user.email ?? '';
+      if (_isLoggedIn) {
+        fetchUserProfile();
+      } else {
+        _resetProfile();
+      }
       notifyListeners();
     });
+  }
+
+  Future<void> fetchUserProfile() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      final data = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (data != null) {
+        _selectedSkillLevelIndex = data['skill_level'] as int? ?? 1;
+        _matches = data['matches'] as int? ?? 0;
+        _winRate = data['win_rate'] as int? ?? 0;
+        _powerIndex = data['power_index'] as int? ?? 50;
+        _control = data['control'] as int? ?? 50;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error fetching user profile: $e");
+    }
+  }
+
+  Future<void> updateUserProfile() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      await _supabase.from('profiles').upsert({
+        'id': user.id,
+        'skill_level': _selectedSkillLevelIndex,
+        'matches': _matches,
+        'win_rate': _winRate,
+        'power_index': _powerIndex,
+        'control': _control,
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      debugPrint("Error updating user profile: $e");
+    }
+  }
+
+  void _resetProfile() {
+    _selectedSkillLevelIndex = 1;
+    _matches = 0;
+    _winRate = 0;
+    _powerIndex = 50;
+    _control = 50;
   }
 
   Future<void> login(String email, String password) async {
@@ -56,6 +126,7 @@ class AppState extends ChangeNotifier {
   void selectSkillLevel(int index) {
     _selectedSkillLevelIndex = index;
     notifyListeners();
+    updateUserProfile();
   }
 
   void setQuizStep(int step) {

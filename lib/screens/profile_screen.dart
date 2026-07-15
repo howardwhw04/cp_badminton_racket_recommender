@@ -101,11 +101,11 @@ class ProfileScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildStatCard("Matches", "42", Icons.emoji_events),
+                  child: _buildStatCard("Matches", state.matches.toString(), Icons.emoji_events),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildStatCard("Win Rate", "68%", Icons.trending_up),
+                  child: _buildStatCard("Win Rate", "${state.winRate}%", Icons.trending_up),
                 ),
               ],
             ),
@@ -113,11 +113,11 @@ class ProfileScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildStatCard("Power Index", "92", Icons.flash_on),
+                  child: _buildStatCard("Power Index", state.powerIndex.toString(), Icons.flash_on),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _buildStatCard("Control", "85", Icons.gps_fixed),
+                  child: _buildStatCard("Control", state.control.toString(), Icons.gps_fixed),
                 ),
               ],
             ),
