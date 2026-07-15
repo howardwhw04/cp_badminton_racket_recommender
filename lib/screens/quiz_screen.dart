@@ -63,7 +63,9 @@ class QuizScreen extends StatelessWidget {
                     height: 8,
                     width: isActive ? 32 : 8,
                     decoration: BoxDecoration(
-                      color: isActive ? const Color(0xFF00F5D4) : Colors.white24,
+                      color: isActive
+                          ? const Color(0xFF00F5D4)
+                          : Colors.white24,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   );
@@ -97,7 +99,7 @@ class QuizScreen extends StatelessWidget {
               Text(
                 "Help us calibrate our algorithm for your playstyle.",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
+                  color: Colors.white.withValues(alpha: 0.6),
                   fontFamily: 'Inter',
                   fontSize: 15,
                 ),
@@ -109,7 +111,8 @@ class QuizScreen extends StatelessWidget {
                 child: ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: options.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final option = options[index];
                     final isSelected = state.selectedSkillLevelIndex == index;
@@ -127,16 +130,18 @@ class QuizScreen extends StatelessWidget {
                           border: Border.all(
                             color: isSelected
                                 ? const Color(0xFF00F5D4)
-                                : Colors.white.withOpacity(0.06),
+                                : Colors.white.withValues(alpha: 0.06),
                             width: isSelected ? 2 : 1,
                           ),
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFF00F5D4).withOpacity(0.08),
+                                    color: const Color(
+                                      0xFF00F5D4,
+                                    ).withValues(alpha: 0.08),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
-                                  )
+                                  ),
                                 ]
                               : null,
                         ),
@@ -148,13 +153,17 @@ class QuizScreen extends StatelessWidget {
                               width: 48,
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? const Color(0xFF00F5D4).withOpacity(0.1)
-                                    : Colors.white.withOpacity(0.05),
+                                    ? const Color(
+                                        0xFF00F5D4,
+                                      ).withValues(alpha: 0.1)
+                                    : Colors.white.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Icon(
                                 option["icon"] as IconData,
-                                color: isSelected ? const Color(0xFF00F5D4) : Colors.white60,
+                                color: isSelected
+                                    ? const Color(0xFF00F5D4)
+                                    : Colors.white60,
                                 size: 24,
                               ),
                             ),
@@ -177,7 +186,9 @@ class QuizScreen extends StatelessWidget {
                                   Text(
                                     option["subtitle"] as String,
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
                                       fontFamily: 'Inter',
                                       fontSize: 13,
                                     ),
@@ -187,8 +198,12 @@ class QuizScreen extends StatelessWidget {
                             ),
                             // Trailing radio / checked indicator
                             Icon(
-                              isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-                              color: isSelected ? const Color(0xFF00F5D4) : Colors.white24,
+                              isSelected
+                                  ? Icons.check_circle
+                                  : Icons.radio_button_unchecked,
+                              color: isSelected
+                                  ? const Color(0xFF00F5D4)
+                                  : Colors.white24,
                               size: 24,
                             ),
                           ],
@@ -215,7 +230,7 @@ class QuizScreen extends StatelessWidget {
                       child: Text(
                         "Back",
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           fontFamily: 'Inter',
                           fontSize: 15,
                           fontWeight: FontWeight.w600,

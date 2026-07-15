@@ -14,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _isSignUp = false;
 
   @override
   void dispose() {
@@ -22,14 +24,67 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleSignIn() {
+  Future<void> _handleAuth() async {
     final state = Provider.of<AppState>(context, listen: false);
     final email = _emailController.text.trim();
-    if (email.isNotEmpty) {
-      state.login(email);
-    } else {
-      state.login("athlete@aerocore.com"); // Fallback mock login
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in all fields."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (_isSignUp) {
+        await state.signUp(email, password);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Check your email for confirmation!"),
+              backgroundColor: Color(0xFF00F5D4),
+            ),
+          );
+          setState(() {
+            _isSignUp = false;
+          });
+        }
+      } else {
+        await state.login(email, password);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Authentication failed: ${e.toString().replaceAll("Exception: ", "")}"),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _showOAuthMessage(String provider) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("$provider login is not configured. Please use Email/Password."),
+        backgroundColor: const Color(0xFF111C28),
+      ),
+    );
   }
 
   @override
@@ -117,9 +172,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Welcome back",
-                      style: TextStyle(
+                    Text(
+                      _isSignUp ? "Create Profile" : "Welcome back",
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Orbitron',
                         fontSize: 22,
@@ -128,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Log in to your athlete profile",
+                      _isSignUp ? "Sign up to track your gear calibration" : "Log in to your athlete profile",
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontFamily: 'Inter',
@@ -157,32 +212,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Forgot Password Hyperlink
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          "Forgot password?",
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontFamily: 'Inter',
-                            fontSize: 13,
+                    // Forgot Password Hyperlink (only show on Sign In)
+                    if (!_isSignUp)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Password recovery is handled via Supabase dashboard."),
+                              ),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            "Forgot password?",
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.6),
+                              fontFamily: 'Inter',
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 24),
 
-                    // Sign In Button
+                    // Sign In / Sign Up Button
                     CustomButton(
-                      text: "Sign In",
-                      onPressed: _handleSignIn,
+                      text: _isSignUp ? "Sign Up" : "Sign In",
+                      isLoading: _isLoading,
+                      onPressed: _handleAuth,
                     ),
                     const SizedBox(height: 24),
 
@@ -225,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: CustomButton(
                             text: "Google",
                             isPrimary: false,
-                            onPressed: _handleSignIn,
+                            onPressed: () => _showOAuthMessage("Google"),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -233,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: CustomButton(
                             text: "Apple",
                             isPrimary: false,
-                            onPressed: _handleSignIn,
+                            onPressed: () => _showOAuthMessage("Apple"),
                           ),
                         ),
                       ],
@@ -250,7 +313,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "New user? ",
+                    _isSignUp ? "Already have an account? " : "New user? ",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.5),
                       fontFamily: 'Inter',
@@ -258,10 +321,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Create an account",
-                      style: TextStyle(
+                    onTap: () {
+                      setState(() {
+                        _isSignUp = !_isSignUp;
+                      });
+                    },
+                    child: Text(
+                      _isSignUp ? "Sign In" : "Create an account",
+                      style: const TextStyle(
                         color: Color(0xFF00F5D4),
                         fontFamily: 'Inter',
                         fontSize: 14,

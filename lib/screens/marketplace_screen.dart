@@ -57,7 +57,9 @@ class MarketplaceScreen extends StatelessWidget {
                     TextField(
                       controller: titleController,
                       style: const TextStyle(color: Colors.white),
-                      decoration: _buildFormDecoration("e.g. Yonex Nanoflare 1000Z"),
+                      decoration: _buildFormDecoration(
+                        "e.g. Yonex Nanoflare 1000Z",
+                      ),
                     ),
                     const SizedBox(height: 16),
                     // Price & Location
@@ -86,7 +88,9 @@ class MarketplaceScreen extends StatelessWidget {
                               TextField(
                                 controller: locationController,
                                 style: const TextStyle(color: Colors.white),
-                                decoration: _buildFormDecoration("e.g. Petaling Jaya"),
+                                decoration: _buildFormDecoration(
+                                  "e.g. Petaling Jaya",
+                                ),
                               ),
                             ],
                           ),
@@ -105,7 +109,9 @@ class MarketplaceScreen extends StatelessWidget {
                               TextField(
                                 controller: conditionController,
                                 style: const TextStyle(color: Colors.white),
-                                decoration: _buildFormDecoration("e.g. Used - Like New"),
+                                decoration: _buildFormDecoration(
+                                  "e.g. Used - Like New",
+                                ),
                               ),
                             ],
                           ),
@@ -119,7 +125,9 @@ class MarketplaceScreen extends StatelessWidget {
                               TextField(
                                 controller: durationController,
                                 style: const TextStyle(color: Colors.white),
-                                decoration: _buildFormDecoration("e.g. 6 Months Used"),
+                                decoration: _buildFormDecoration(
+                                  "e.g. 6 Months Used",
+                                ),
                               ),
                             ],
                           ),
@@ -142,10 +150,18 @@ class MarketplaceScreen extends StatelessWidget {
                           dropdownColor: const Color(0xFF111C28),
                           iconEnabledColor: const Color(0xFF00F5D4),
                           isExpanded: true,
-                          style: const TextStyle(color: Colors.white, fontFamily: 'Inter'),
-                          items: ["Racquets", "Footwear", "Bags", "Accessories"].map((cat) {
-                            return DropdownMenuItem(value: cat, child: Text(cat));
-                          }).toList(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Inter',
+                          ),
+                          items: ["Racquets", "Footwear", "Bags", "Accessories"]
+                              .map((cat) {
+                                return DropdownMenuItem(
+                                  value: cat,
+                                  child: Text(cat),
+                                );
+                              })
+                              .toList(),
                           onChanged: (val) {
                             if (val != null) {
                               setModalState(() {
@@ -171,7 +187,7 @@ class MarketplaceScreen extends StatelessWidget {
                         ),
                         Switch(
                           value: isElite,
-                          activeColor: const Color(0xFF00F5D4),
+                          activeThumbColor: const Color(0xFF00F5D4),
                           onChanged: (val) {
                             setModalState(() {
                               isElite = val;
@@ -187,7 +203,8 @@ class MarketplaceScreen extends StatelessWidget {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          final price = double.tryParse(priceController.text) ?? 0.0;
+                          final price =
+                              double.tryParse(priceController.text) ?? 0.0;
                           final newListing = MarketplaceItem(
                             title: titleController.text.isNotEmpty
                                 ? titleController.text
@@ -196,8 +213,8 @@ class MarketplaceScreen extends StatelessWidget {
                             imagePath: selectedCategory == "Footwear"
                                 ? "assets/images/market_shoes.png"
                                 : selectedCategory == "Bags"
-                                    ? "assets/images/market_bag.png"
-                                    : "assets/images/racket_volts3.png", // fallback default
+                                ? "assets/images/market_bag.png"
+                                : "assets/images/racket_volts3.png", // fallback default
                             condition: conditionController.text,
                             usageDuration: durationController.text,
                             location: locationController.text.isNotEmpty
@@ -329,7 +346,9 @@ class MarketplaceScreen extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? const Color(0xFF0D1622) : Colors.white70,
+                        color: isSelected
+                            ? const Color(0xFF0D1622)
+                            : Colors.white70,
                       ),
                     ),
                     selected: isSelected,
@@ -342,7 +361,9 @@ class MarketplaceScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: BorderSide(
-                        color: isSelected ? Colors.transparent : Colors.white.withOpacity(0.04),
+                        color: isSelected
+                            ? Colors.transparent
+                            : Colors.white.withValues(alpha: 0.04),
                       ),
                     ),
                   ),
@@ -363,12 +384,14 @@ class MarketplaceScreen extends StatelessWidget {
                   )
                 : GridView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.58, // Adjust ratio for content details
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio:
+                              0.58, // Adjust ratio for content details
+                        ),
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
@@ -378,7 +401,7 @@ class MarketplaceScreen extends StatelessWidget {
                           color: const Color(0xFF111C28),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.06),
+                            color: Colors.white.withValues(alpha: 0.06),
                             width: 1,
                           ),
                         ),
@@ -400,8 +423,9 @@ class MarketplaceScreen extends StatelessWidget {
                                     child: Image.asset(
                                       item.imagePath,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          Container(color: Colors.black26),
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Container(color: Colors.black26),
                                     ),
                                   ),
                                 ),
@@ -501,7 +525,9 @@ class MarketplaceScreen extends StatelessWidget {
                                           child: Text(
                                             item.location,
                                             style: TextStyle(
-                                              color: Colors.white.withOpacity(0.4),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.4,
+                                              ),
                                               fontFamily: 'Inter',
                                               fontSize: 11,
                                             ),
@@ -525,7 +551,9 @@ class MarketplaceScreen extends StatelessWidget {
       ),
       // Overlay Floating Action Button in bottom right corner
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 76.0), // Above bottom bar padding
+        padding: const EdgeInsets.only(
+          bottom: 76.0,
+        ), // Above bottom bar padding
         child: FloatingActionButton(
           backgroundColor: const Color(0xFF00F5D4),
           foregroundColor: const Color(0xFF0D1622),

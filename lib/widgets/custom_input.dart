@@ -48,7 +48,7 @@ class _CustomInputState extends State<CustomInput> {
             color: const Color(0xFF111C28),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withOpacity(0.08),
+              color: Colors.white.withValues(alpha: 0.08),
               width: 1,
             ),
           ),
@@ -65,13 +65,13 @@ class _CustomInputState extends State<CustomInput> {
             decoration: InputDecoration(
               hintText: widget.placeholder,
               hintStyle: TextStyle(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 fontFamily: 'Inter',
                 fontSize: 16,
               ),
               prefixIcon: Icon(
                 widget.prefixIcon,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 size: 20,
               ),
               suffixIcon: widget.isPassword
@@ -80,7 +80,7 @@ class _CustomInputState extends State<CustomInput> {
                         _obscureText
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         size: 20,
                       ),
                       onPressed: () {

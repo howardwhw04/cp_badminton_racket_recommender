@@ -40,17 +40,26 @@ class ProfileScreen extends StatelessWidget {
                     width: 90,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF00F5D4), width: 2),
+                      border: Border.all(
+                        color: const Color(0xFF00F5D4),
+                        width: 2,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF00F5D4).withOpacity(0.15),
+                          color: const Color(
+                            0xFF00F5D4,
+                          ).withValues(alpha: 0.15),
                           blurRadius: 20,
                         ),
                       ],
                     ),
                     child: const CircleAvatar(
                       backgroundColor: Color(0xFF111C28),
-                      child: Icon(Icons.person, size: 45, color: Colors.white60),
+                      child: Icon(
+                        Icons.person,
+                        size: 45,
+                        color: Colors.white60,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -67,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                   Text(
                     state.isLoggedIn ? state.email : "guest@aerocore.com",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontFamily: 'Inter',
                       fontSize: 13,
                     ),
@@ -131,17 +140,33 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF111C28),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.04)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
               ),
               child: Column(
                 children: [
-                  _buildProfileRow("Skill Calibration", state.selectedSkillLevelIndex == 0 ? "Beginner" : state.selectedSkillLevelIndex == 1 ? "Intermediate" : "Advanced"),
+                  _buildProfileRow(
+                    "Skill Calibration",
+                    state.selectedSkillLevelIndex == 0
+                        ? "Beginner"
+                        : state.selectedSkillLevelIndex == 1
+                        ? "Intermediate"
+                        : "Advanced",
+                  ),
                   const Divider(color: Colors.white10, height: 24),
-                  _buildProfileRow("Primary Racket", state.recommendedRacket.name),
+                  _buildProfileRow(
+                    "Primary Racket",
+                    state.recommendedRacket.name,
+                  ),
                   const Divider(color: Colors.white10, height: 24),
-                  _buildProfileRow("Weight Preferred", state.recommendedRacket.weight),
+                  _buildProfileRow(
+                    "Weight Preferred",
+                    state.recommendedRacket.weight,
+                  ),
                   const Divider(color: Colors.white10, height: 24),
-                  _buildProfileRow("Shaft Stiffness", state.recommendedRacket.flex),
+                  _buildProfileRow(
+                    "Shaft Stiffness",
+                    state.recommendedRacket.flex,
+                  ),
                 ],
               ),
             ),
@@ -193,7 +218,7 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF111C28),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.04)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

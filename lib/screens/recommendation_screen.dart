@@ -33,7 +33,9 @@ class RecommendationScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF00F5D4).withOpacity(0.12),
+                            color: const Color(
+                              0xFF00F5D4,
+                            ).withValues(alpha: 0.12),
                             blurRadius: 40,
                             spreadRadius: 5,
                           ),
@@ -47,7 +49,7 @@ class RecommendationScreen extends StatelessWidget {
                       child: CircularProgressIndicator(
                         value: 1.0,
                         strokeWidth: 8,
-                        color: Colors.white.withOpacity(0.06),
+                        color: Colors.white.withValues(alpha: 0.06),
                       ),
                     ),
                     // Active value progress indicator
@@ -100,9 +102,11 @@ class RecommendationScreen extends StatelessWidget {
                             letterSpacing: 1.5,
                             shadows: [
                               Shadow(
-                                color: const Color(0xFF00F5D4).withOpacity(0.5),
+                                color: const Color(
+                                  0xFF00F5D4,
+                                ).withValues(alpha: 0.5),
                                 blurRadius: 8,
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -120,7 +124,7 @@ class RecommendationScreen extends StatelessWidget {
                   color: const Color(0xFF111C28),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.06),
+                    color: Colors.white.withValues(alpha: 0.06),
                     width: 1,
                   ),
                 ),
@@ -143,10 +147,15 @@ class RecommendationScreen extends StatelessWidget {
                             child: Image.asset(
                               recommended.imagePath,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: Colors.black45,
-                                child: const Icon(Icons.image, size: 50, color: Colors.white24),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                    color: Colors.black45,
+                                    child: const Icon(
+                                      Icons.image,
+                                      size: 50,
+                                      color: Colors.white24,
+                                    ),
+                                  ),
                             ),
                           ),
                         ),
@@ -155,7 +164,10 @@ class RecommendationScreen extends StatelessWidget {
                           top: 16,
                           left: 16,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFF00F5D4),
                               borderRadius: BorderRadius.circular(8),
@@ -207,7 +219,10 @@ class RecommendationScreen extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildSpecCell("Weight", recommended.weight),
+                                child: _buildSpecCell(
+                                  "Weight",
+                                  recommended.weight,
+                                ),
                               ),
                               Container(
                                 height: 32,
@@ -215,7 +230,10 @@ class RecommendationScreen extends StatelessWidget {
                                 color: Colors.white10,
                               ),
                               Expanded(
-                                child: _buildSpecCell("Balance", recommended.balance),
+                                child: _buildSpecCell(
+                                  "Balance",
+                                  recommended.balance,
+                                ),
                               ),
                               Container(
                                 height: 32,
@@ -255,7 +273,9 @@ class RecommendationScreen extends StatelessWidget {
                                   child: Text(
                                     recommended.matchExplanation,
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.85),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.85,
+                                      ),
                                       fontFamily: 'Inter',
                                       fontSize: 13,
                                       height: 1.5,
@@ -308,7 +328,7 @@ class RecommendationScreen extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             fontFamily: 'Inter',
             fontSize: 12,
           ),

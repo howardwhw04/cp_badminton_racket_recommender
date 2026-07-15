@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final IconData? trailingIcon;
   final double width;
   final double height;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
     this.trailingIcon,
     this.width = double.infinity,
     this.height = 56,
+    this.isLoading = false,
   });
 
   @override
@@ -35,7 +37,7 @@ class CustomButton extends StatelessWidget {
           ],
         ),
         child: ElevatedButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF00F5D4),
             foregroundColor: const Color(0xFF0D1622),
@@ -45,24 +47,33 @@ class CustomButton extends StatelessWidget {
             ),
             elevation: 0,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                text,
-                style: const TextStyle(
-                  fontFamily: 'Orbitron',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0D1622)),
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: const TextStyle(
+                        fontFamily: 'Orbitron',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    if (trailingIcon != null) ...[
+                      const SizedBox(width: 8),
+                      Icon(trailingIcon, size: 18, color: const Color(0xFF0D1622)),
+                    ],
+                  ],
                 ),
-              ),
-              if (trailingIcon != null) ...[
-                const SizedBox(width: 8),
-                Icon(trailingIcon, size: 18, color: const Color(0xFF0D1622)),
-              ],
-            ],
-          ),
         ),
       );
     } else {
@@ -71,7 +82,7 @@ class CustomButton extends StatelessWidget {
         width: width,
         height: height,
         child: OutlinedButton(
-          onPressed: onPressed,
+          onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.white,
             side: BorderSide(color: Colors.white.withOpacity(0.12), width: 1.5),
@@ -80,15 +91,24 @@ class CustomButton extends StatelessWidget {
             ),
             backgroundColor: const Color(0xFF111C28).withOpacity(0.5),
           ),
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00F5D4)),
+                  ),
+                )
+              : Text(
+                  text,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       );
     }

@@ -49,10 +49,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
         ),
         body: const TabBarView(
-          children: [
-            RecommendationScreen(),
-            ComparisonScreen(),
-          ],
+          children: [RecommendationScreen(), ComparisonScreen()],
         ),
       ),
     );
@@ -72,10 +69,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     // List of screens for each tab
     final List<Widget> screens = [
       _buildHomeTab(context, state), // Tab 0: Home
-      const QuizScreen(),            // Tab 1: Quiz
-      _buildCompareTab(context),     // Tab 2: Compare
-      const MarketplaceScreen(),      // Tab 3: Market
-      const ProfileScreen(),          // Tab 4: Profile
+      const QuizScreen(), // Tab 1: Quiz
+      _buildCompareTab(context), // Tab 2: Compare
+      const MarketplaceScreen(), // Tab 3: Market
+      const ProfileScreen(), // Tab 4: Profile
     ];
 
     return Scaffold(
@@ -85,11 +82,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           // Screen Content
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 76), // leave room for bottom bar
-              child: IndexedStack(
-                index: _currentIndex,
-                children: screens,
-              ),
+              padding: const EdgeInsets.only(
+                bottom: 76,
+              ), // leave room for bottom bar
+              child: IndexedStack(index: _currentIndex, children: screens),
             ),
           ),
           // Frosted Glass Bottom Navigation Bar
@@ -103,10 +99,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 child: Container(
                   height: 76,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0A0F18).withOpacity(0.85),
+                    color: const Color(0xFF0A0F18).withValues(alpha: 0.85),
                     border: Border(
                       top: BorderSide(
-                        color: Colors.white.withOpacity(0.06),
+                        color: Colors.white.withValues(alpha: 0.06),
                         width: 1,
                       ),
                     ),
@@ -152,12 +148,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF00F5D4) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xFF00F5D4)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? const Color(0xFF0D1622) : Colors.white.withOpacity(0.5),
+                color: isSelected
+                    ? const Color(0xFF0D1622)
+                    : Colors.white.withValues(alpha: 0.5),
                 size: 22,
               ),
             ),
@@ -168,7 +168,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 fontFamily: 'Inter',
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? const Color(0xFF00F5D4) : Colors.white.withOpacity(0.5),
+                color: isSelected
+                    ? const Color(0xFF00F5D4)
+                    : Colors.white.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -216,7 +218,7 @@ class HomeDashboard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF111C28),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.08)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,7 +236,7 @@ class HomeDashboard extends StatelessWidget {
                   Text(
                     state.email,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       fontFamily: 'Inter',
                       fontSize: 14,
                     ),
@@ -257,8 +259,8 @@ class HomeDashboard extends StatelessWidget {
                         state.selectedSkillLevelIndex == 0
                             ? "Beginner"
                             : state.selectedSkillLevelIndex == 1
-                                ? "Intermediate"
-                                : "Advanced",
+                            ? "Intermediate"
+                            : "Advanced",
                         style: const TextStyle(
                           color: Color(0xFF00F5D4),
                           fontFamily: 'Orbitron',
@@ -290,7 +292,7 @@ class HomeDashboard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF111C28),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.08)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
               child: Row(
                 children: [
@@ -337,7 +339,7 @@ class HomeDashboard extends StatelessWidget {
                         Text(
                           "${recommended.matchRating}% Match Rating",
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontFamily: 'Inter',
                             fontSize: 13,
                           ),
@@ -357,16 +359,13 @@ class HomeDashboard extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF111C28),
-                    const Color(0xFF0A0F18),
-                  ],
+                  colors: [const Color(0xFF111C28), const Color(0xFF0A0F18)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF00F5D4).withOpacity(0.2),
+                  color: const Color(0xFF00F5D4).withValues(alpha: 0.2),
                 ),
               ),
               child: const Row(

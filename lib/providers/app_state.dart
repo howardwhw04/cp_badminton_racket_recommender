@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/racket.dart';
 import '../models/marketplace_item.dart';
 
 class AppState extends ChangeNotifier {
+  final SupabaseClient _supabase = Supabase.instance.client;
+
   // Authentication State
   bool _isLoggedIn = false;
   String _email = '';
@@ -10,16 +13,37 @@ class AppState extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   String get email => _email;
 
-  void login(String email) {
-    _isLoggedIn = true;
-    _email = email;
-    notifyListeners();
+  AppState() {
+    // Check initial session
+    final session = _supabase.auth.currentSession;
+    _isLoggedIn = session != null;
+    _email = session?.user.email ?? '';
+
+    // Listen to authentication state updates dynamically
+    _supabase.auth.onAuthStateChange.listen((data) {
+      final session = data.session;
+      _isLoggedIn = session != null;
+      _email = session?.user.email ?? '';
+      notifyListeners();
+    });
   }
 
-  void logout() {
-    _isLoggedIn = false;
-    _email = '';
-    notifyListeners();
+  Future<void> login(String email, String password) async {
+    await _supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<void> signUp(String email, String password) async {
+    await _supabase.auth.signUp(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<void> logout() async {
+    await _supabase.auth.signOut();
   }
 
   // Questionnaire / Quiz State

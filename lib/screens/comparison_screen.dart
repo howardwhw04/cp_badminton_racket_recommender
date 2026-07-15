@@ -84,15 +84,17 @@ class ComparisonScreen extends StatelessWidget {
                                 border: Border.all(
                                   color: isCompared
                                       ? const Color(0xFF00F5D4)
-                                      : Colors.white.withOpacity(0.06),
+                                      : Colors.white.withValues(alpha: 0.06),
                                   width: isCompared ? 2 : 1,
                                 ),
                                 boxShadow: isCompared
                                     ? [
                                         BoxShadow(
-                                          color: const Color(0xFF00F5D4).withOpacity(0.08),
+                                          color: const Color(
+                                            0xFF00F5D4,
+                                          ).withValues(alpha: 0.08),
                                           blurRadius: 8,
-                                        )
+                                        ),
                                       ]
                                     : null,
                               ),
@@ -105,8 +107,11 @@ class ComparisonScreen extends StatelessWidget {
                                       child: Image.asset(
                                         racket.imagePath,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) =>
-                                            Container(color: Colors.black38),
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Container(
+                                                  color: Colors.black38,
+                                                ),
                                       ),
                                     ),
                                   ),
@@ -118,7 +123,7 @@ class ComparisonScreen extends StatelessWidget {
                                         gradient: LinearGradient(
                                           colors: [
                                             Colors.transparent,
-                                            Colors.black.withOpacity(0.8),
+                                            Colors.black.withValues(alpha: 0.8),
                                           ],
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
@@ -138,7 +143,9 @@ class ComparisonScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: isCompared
-                                            ? const Color(0xFF00F5D4).withOpacity(0.2)
+                                            ? const Color(
+                                                0xFF00F5D4,
+                                              ).withValues(alpha: 0.2)
                                             : Colors.black54,
                                         borderRadius: BorderRadius.circular(4),
                                       ),
@@ -185,14 +192,20 @@ class ComparisonScreen extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 40.0),
                           child: Text(
                             "Select rackets above to compare details.",
-                            style: TextStyle(color: Colors.grey, fontFamily: 'Inter'),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Inter',
+                            ),
                           ),
                         ),
                       )
                     else ...[
                       // BRAND IDENTITY section
                       _buildSectionTitle("Brand Identity"),
-                      _buildRow(comparedRackets, (racket) => _buildCardCell(racket.brand)),
+                      _buildRow(
+                        comparedRackets,
+                        (racket) => _buildCardCell(racket.brand),
+                      ),
 
                       // WEIGHT CLASS
                       _buildSectionTitle("Weight Class (U-Rating)"),
@@ -206,11 +219,17 @@ class ComparisonScreen extends StatelessWidget {
 
                       // BALANCE POINT
                       _buildSectionTitle("Balance Point (mm)"),
-                      _buildRow(comparedRackets, (racket) => _buildBalanceCell(racket)),
+                      _buildRow(
+                        comparedRackets,
+                        (racket) => _buildBalanceCell(racket),
+                      ),
 
                       // SHAFT FLEXIBILITY
                       _buildSectionTitle("Shaft Flexibility"),
-                      _buildRow(comparedRackets, (racket) => _buildFlexibilityCell(racket)),
+                      _buildRow(
+                        comparedRackets,
+                        (racket) => _buildFlexibilityCell(racket),
+                      ),
                     ],
                   ],
                 ),
@@ -322,7 +341,7 @@ class ComparisonScreen extends StatelessWidget {
           Text(
             line2,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.white.withValues(alpha: 0.4),
               fontFamily: 'Inter',
               fontSize: 10,
             ),
@@ -369,7 +388,7 @@ class ComparisonScreen extends StatelessWidget {
         Text(
           racket.balanceText,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             fontFamily: 'Inter',
             fontSize: 10,
           ),
@@ -388,11 +407,7 @@ class ComparisonScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.flash_on,
-            color: Color(0xFF00F5D4),
-            size: 16,
-          ),
+          const Icon(Icons.flash_on, color: Color(0xFF00F5D4), size: 16),
           const SizedBox(width: 6),
           Text(
             racket.flex.toUpperCase(),
