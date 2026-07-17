@@ -55,20 +55,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
-  Widget _buildHomeTab(BuildContext context, AppState state) {
-    if (!state.isLoggedIn) {
-      return const LoginScreen();
-    }
-    return const HomeDashboard();
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
 
+    if (!state.isLoggedIn) {
+      if (_currentIndex != 0) {
+        _currentIndex = 0;
+      }
+      return const LoginScreen();
+    }
+
     // List of screens for each tab
     final List<Widget> screens = [
-      _buildHomeTab(context, state), // Tab 0: Home
+      const HomeDashboard(), // Tab 0: Home
       const QuizScreen(), // Tab 1: Quiz
       _buildCompareTab(context), // Tab 2: Compare
       const MarketplaceScreen(), // Tab 3: Market
