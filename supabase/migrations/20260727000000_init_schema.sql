@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS rackets (
     price_myr NUMERIC(10, 2) NOT NULL,
     price_tier TEXT CHECK (price_tier IN ('Budget', 'Mid-Range', 'Premium')),
     asset_image_path TEXT NOT NULL, -- Local asset path: 'assets/images/astrox99.png'
-    match_rating INT NOT NULL DEFAULT 80,
-    match_explanation TEXT NOT NULL DEFAULT ''
+    description TEXT NOT NULL DEFAULT ''
 );
 
 -- 2. USER PROFILES TABLE (Quiz Answers & Player State)
