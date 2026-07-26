@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF00F5D4).withOpacity(0.3),
+              color: const Color(0xFF00F5D4).withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -59,13 +59,17 @@ class CustomButton extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      text,
-                      style: const TextStyle(
-                        fontFamily: 'Orbitron',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
+                    Flexible(
+                      child: Text(
+                        text,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontFamily: 'Orbitron',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                     ),
                     if (trailingIcon != null) ...[
@@ -85,11 +89,11 @@ class CustomButton extends StatelessWidget {
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.white,
-            side: BorderSide(color: Colors.white.withOpacity(0.12), width: 1.5),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.12), width: 1.5),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            backgroundColor: const Color(0xFF111C28).withOpacity(0.5),
+            backgroundColor: const Color(0xFF111C28).withValues(alpha: 0.5),
           ),
           child: isLoading
               ? const SizedBox(
