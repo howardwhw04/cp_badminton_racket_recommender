@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +9,9 @@ import 'package:badmimton_racket_recommender/config/supabase_config.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // Mock SharedPreferences method channel to prevent MissingPluginException from Supabase
-  const MethodChannel('plugins.flutter.io/shared_preferences')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  const channel = MethodChannel('plugins.flutter.io/shared_preferences');
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{}; // Return empty map
     }
@@ -23,7 +22,7 @@ void main() {
     // Initialize Supabase for test environment
     await Supabase.initialize(
       url: SupabaseConfig.url,
-      anonKey: SupabaseConfig.anonKey,
+      publishableKey: SupabaseConfig.anonKey,
       authOptions: const FlutterAuthClientOptions(
         autoRefreshToken: false,
       ),

@@ -78,15 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _showOAuthMessage(String provider) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("$provider login is not configured. Please use Email/Password."),
-        backgroundColor: const Color(0xFF111C28),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.4),
+                        Colors.black.withValues(alpha: 0.4),
                         const Color(0xFF0D1622),
                       ],
                       begin: Alignment.topCenter,
@@ -144,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         "Experience data-driven performance with the next generation of gear.",
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                           fontFamily: 'Inter',
                           fontSize: 14,
                           height: 1.4,
@@ -165,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: const Color(0xFF111C28),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.06),
+                    color: Colors.white.withValues(alpha: 0.06),
                     width: 1,
                   ),
                 ),
@@ -185,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       _isSignUp ? "Sign up to track your gear calibration" : "Log in to your athlete profile",
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         fontFamily: 'Inter',
                         fontSize: 13,
                       ),
@@ -232,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             "Forgot password?",
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
                               fontFamily: 'Inter',
                               fontSize: 13,
                             ),
@@ -247,60 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       isLoading: _isLoading,
                       onPressed: _handleAuth,
                     ),
-                    const SizedBox(height: 24),
 
-                    // OR CONTINUE WITH Separator
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Colors.white.withOpacity(0.1),
-                            thickness: 1,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            "OR CONTINUE WITH",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.4),
-                              fontFamily: 'Orbitron',
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.0,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.white.withOpacity(0.1),
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Social Sign In Row
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomButton(
-                            text: "Google",
-                            isPrimary: false,
-                            onPressed: () => _showOAuthMessage("Google"),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: CustomButton(
-                            text: "Apple",
-                            isPrimary: false,
-                            onPressed: () => _showOAuthMessage("Apple"),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -315,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     _isSignUp ? "Already have an account? " : "New user? ",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       fontFamily: 'Inter',
                       fontSize: 14,
                     ),
