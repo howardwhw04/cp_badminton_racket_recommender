@@ -4,8 +4,21 @@ import '../providers/app_state.dart';
 import '../models/racket.dart';
 import '../widgets/custom_button.dart';
 
-class ComparisonScreen extends StatelessWidget {
+class ComparisonScreen extends StatefulWidget {
   const ComparisonScreen({super.key});
+
+  @override
+  State<ComparisonScreen> createState() => _ComparisonScreenState();
+}
+
+class _ComparisonScreenState extends State<ComparisonScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AppState>(context, listen: false).fetchRackets();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +26,9 @@ class ComparisonScreen extends StatelessWidget {
     final allRackets = state.rackets;
     final comparedIndices = state.comparedRacketIndices;
 
-    // Resolve rackets being compared
+    // Resolve rackets being compared safely
     final List<Racket> comparedRackets = comparedIndices
+        .where((idx) => idx >= 0 && idx < allRackets.length)
         .map((idx) => allRackets[idx])
         .toList();
 
@@ -30,12 +44,12 @@ class ComparisonScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Header Text
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Technical Comparison",
                             style: TextStyle(
                               color: Colors.white,
@@ -44,8 +58,8 @@ class ComparisonScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          const SizedBox(height: 8),
+                          const Text(
                             "Analyze the core performance specs of your top selected gear side-by-side.",
                             style: TextStyle(
                               color: Colors.grey,
@@ -54,6 +68,12 @@ class ComparisonScreen extends StatelessWidget {
                               height: 1.4,
                             ),
                           ),
+                          if (state.isLoadingRackets) ...[
+                            const SizedBox(height: 16),
+                            const Center(
+                              child: LinearProgressIndicator(color: Color(0xFF00F5D4)),
+                            ),
+                          ],
                         ],
                       ),
                     ),
