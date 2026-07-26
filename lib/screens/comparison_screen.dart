@@ -230,6 +230,20 @@ class ComparisonScreen extends StatelessWidget {
                         comparedRackets,
                         (racket) => _buildFlexibilityCell(racket),
                       ),
+
+                      // PRICE & TIER
+                      _buildSectionTitle("Price & Budget Tier"),
+                      _buildRow(
+                        comparedRackets,
+                        (racket) => _buildPriceCell(racket),
+                      ),
+
+                      // COMPATIBILITY/DESCRIPTION
+                      _buildSectionTitle("Compatibility Analysis"),
+                      _buildRow(
+                        comparedRackets,
+                        (racket) => _buildDescriptionCell(racket),
+                      ),
                     ],
                   ],
                 ),
@@ -419,6 +433,64 @@ class ComparisonScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPriceCell(Racket racket) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111C28),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            "RM ${racket.priceMyr.toStringAsFixed(0)}",
+            style: const TextStyle(
+              color: Color(0xFF00F5D4),
+              fontFamily: 'Orbitron',
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            racket.priceTier.toUpperCase(),
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.4),
+              fontFamily: 'Inter',
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDescriptionCell(Racket racket) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      height: 110,
+      decoration: BoxDecoration(
+        color: const Color(0xFF111C28),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+      ),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Text(
+          racket.matchExplanation.isNotEmpty ? racket.matchExplanation : racket.description,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.7),
+            fontFamily: 'Inter',
+            fontSize: 11,
+            height: 1.4,
+          ),
+        ),
       ),
     );
   }

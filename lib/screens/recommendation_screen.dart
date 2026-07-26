@@ -19,104 +19,6 @@ class RecommendationScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
-              // Circular Match Score Ring
-              Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Glow behind the ring
-                    Container(
-                      height: 160,
-                      width: 160,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF00F5D4,
-                            ).withValues(alpha: 0.12),
-                            blurRadius: 40,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Outer track circle
-                    SizedBox(
-                      height: 170,
-                      width: 170,
-                      child: CircularProgressIndicator(
-                        value: 1.0,
-                        strokeWidth: 8,
-                        color: Colors.white.withValues(alpha: 0.06),
-                      ),
-                    ),
-                    // Active value progress indicator
-                    SizedBox(
-                      height: 170,
-                      width: 170,
-                      child: CircularProgressIndicator(
-                        value: recommended.matchRating / 100.0,
-                        strokeWidth: 8,
-                        color: const Color(0xFF00F5D4),
-                        strokeCap: StrokeCap.round,
-                      ),
-                    ),
-                    // Center Content Text
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${recommended.matchRating}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Orbitron',
-                                fontSize: 44,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                            const Text(
-                              "%",
-                              style: TextStyle(
-                                color: Color(0xFF00F5D4),
-                                fontFamily: 'Orbitron',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "MATCH RATING",
-                          style: TextStyle(
-                            color: const Color(0xFF00F5D4),
-                            fontFamily: 'Orbitron',
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            shadows: [
-                              Shadow(
-                                color: const Color(
-                                  0xFF00F5D4,
-                                ).withValues(alpha: 0.5),
-                                blurRadius: 8,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 36),
-
               // Product Showcase Card
               Container(
                 width: double.infinity,
@@ -176,6 +78,35 @@ class RecommendationScreen extends StatelessWidget {
                               "TOP RANKED",
                               style: TextStyle(
                                 color: Color(0xFF0D1622),
+                                fontFamily: 'Orbitron',
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Match score badge
+                        Positioned(
+                          top: 16,
+                          right: 16,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF111C28),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(0xFF00F5D4),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Text(
+                              "${recommended.matchRating}% MATCH",
+                              style: const TextStyle(
+                                color: Color(0xFF00F5D4),
                                 fontFamily: 'Orbitron',
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,

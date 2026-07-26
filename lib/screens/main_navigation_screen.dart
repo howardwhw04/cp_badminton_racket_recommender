@@ -336,12 +336,28 @@ class HomeDashboard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          "${recommended.matchRating}% Match Rating",
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.7),
-                            fontFamily: 'Inter',
-                            fontSize: 13,
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00F5D4).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: const Color(0xFF00F5D4),
+                              width: 1,
+                            ),
+                          ),
+                          child: const Text(
+                            "Calibrated Recommendation",
+                            style: TextStyle(
+                              color: Color(0xFF00F5D4),
+                              fontFamily: 'Orbitron',
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

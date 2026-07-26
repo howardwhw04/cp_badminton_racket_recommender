@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../providers/app_state.dart';
-import '../models/marketplace_item.dart';
+import '../models/market_listing.dart';
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
@@ -202,29 +203,48 @@ class MarketplaceScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           final price =
                               double.tryParse(priceController.text) ?? 0.0;
-                          final newListing = MarketplaceItem(
+                          final sellerId = Supabase.instance.client.auth.currentUser?.id ?? '00000000-0000-0000-0000-000000000000';
+                          final newListing = MarketListing(
+                            sellerId: sellerId,
                             title: titleController.text.isNotEmpty
                                 ? titleController.text
                                 : "AEROCORE Custom Racket",
-                            price: price,
-                            imagePath: selectedCategory == "Footwear"
+                            brand: selectedCategory == "Racquets" ? "Yonex" : "Other",
+                            priceMyr: price,
+                            imageUrl: selectedCategory == "Footwear"
                                 ? "assets/images/market_shoes.png"
                                 : selectedCategory == "Bags"
                                 ? "assets/images/market_bag.png"
-                                : "assets/images/racket_volts3.png", // fallback default
-                            condition: conditionController.text,
-                            usageDuration: durationController.text,
+                                : "assets/images/racket_volts3.png",
+                            itemCondition: conditionController.text.isNotEmpty
+                                ? conditionController.text
+                                : "Used - Like New",
                             location: locationController.text.isNotEmpty
                                 ? locationController.text
                                 : "Malaysia",
-                            tag: isElite ? "ELITE" : "",
-                            category: selectedCategory,
                           );
-                          state.addMarketplaceItem(newListing);
-                          Navigator.pop(context);
+                          
+                          try {
+                            await state.addMarketListing(newListing);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: const Color(0xFF111C28),
+                                  content: Text(
+                                    "Error listing item: $e",
+                                    style: const TextStyle(color: Colors.redAccent),
+                                  ),
+                                ),
+                              );
+                            }
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00F5D4),
