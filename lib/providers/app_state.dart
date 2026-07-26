@@ -400,6 +400,10 @@ class AppState extends ChangeNotifier {
     return list.map((racket) => _calculateCompatibility(racket)).toList();
   }
 
+  List<Racket> get dbRackets {
+    return _dbRackets.map((racket) => _calculateCompatibility(racket)).toList();
+  }
+
   // Comparison State
   final List<int> _comparedRacketIndices = [1, 2]; // Default: Pro-X1, Volt S3
   List<int> get comparedRacketIndices => _comparedRacketIndices;

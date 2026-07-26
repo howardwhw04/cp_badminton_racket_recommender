@@ -23,7 +23,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
-    final allRackets = state.rackets;
+    final allRackets = state.dbRackets;
     final comparedIndices = state.comparedRacketIndices;
 
     // Resolve rackets being compared safely
