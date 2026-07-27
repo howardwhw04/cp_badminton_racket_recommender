@@ -47,13 +47,15 @@ class AppState extends ChangeNotifier {
   int get currentQuizStep => _currentQuizStep;
 
   AppState() {
+    // Always load static rackets from Supabase on startup
+    fetchRackets();
+
     // Check initial session
     final session = _supabase.auth.currentSession;
     _isLoggedIn = session != null;
     _email = session?.user.email ?? '';
     if (_isLoggedIn) {
       fetchUserProfile();
-      fetchRackets();
       fetchMarketListings();
     }
 
@@ -64,7 +66,6 @@ class AppState extends ChangeNotifier {
       _email = session?.user.email ?? '';
       if (_isLoggedIn) {
         fetchUserProfile();
-        fetchRackets();
         fetchMarketListings();
       } else {
         _resetProfile();
@@ -187,7 +188,6 @@ class AppState extends ChangeNotifier {
     _matchType = 'Singles';
     _preferredBudgetTier = 'Mid-Range';
     _currentQuizStep = 0;
-    _dbRackets.clear();
     _marketListings.clear();
   }
 
