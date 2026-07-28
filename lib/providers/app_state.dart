@@ -301,6 +301,12 @@ class AppState extends ChangeNotifier {
       final List<dynamic> data = await _supabase.from('rackets').select();
       if (data.isNotEmpty) {
         _dbRackets = data.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        debugPrint("Supabase rackets table is empty. Seeding fallback rackets...");
+        final racketsJson = _rackets.map((r) => r.toJson()).toList();
+        await _supabase.from('rackets').insert(racketsJson);
+        final List<dynamic> refetched = await _supabase.from('rackets').select();
+        _dbRackets = refetched.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
       }
     } catch (e) {
       debugPrint("Error fetching rackets from Supabase: $e");
@@ -444,7 +450,8 @@ class AppState extends ChangeNotifier {
   }
 
   List<Racket> get dbRackets {
-    return _dbRackets.map((racket) => _calculateCompatibility(racket)).toList();
+    final list = _dbRackets.isNotEmpty ? _dbRackets : _rackets;
+    return list.map((racket) => _calculateCompatibility(racket)).toList();
   }
 
   // Comparison State
