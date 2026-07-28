@@ -229,70 +229,205 @@ class AppState extends ChangeNotifier {
   bool get isLoadingRackets => _isLoadingRackets;
 
   final List<Racket> _rackets = [
+    // YONEX MODELS
     const Racket(
-      brand: "YONEX PROFESSIONAL",
-      name: "Astrox 99 Pro",
-      weightClass: "4U",
-      weightGramsRange: "80-84g",
+      brand: 'Yonex',
+      name: 'Astrox 99 Pro',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
       balancePointMm: 305,
-      balanceCategory: "Head Heavy",
-      shaftFlexibility: "Medium",
-      priceMyr: 850.00,
-      priceTier: "Premium",
-      assetImagePath: "assets/images/racket_astrox.png",
-      description: "Unleash devastating power and steep smash angles with Astrox 99 Pro, designed for high-performance players.",
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Stiff',
+      priceMyr: 689.00,
+      priceTier: 'Premium',
+      assetImagePath: 'assets/images/astrox_99_pro.png',
+      description: 'Engineered for explosive rear-court power. Features the 2G-Namd Flex Force graphite and Rotational Generator System for heavy, steep smashes and continuous attacking play.',
     ),
     const Racket(
-      brand: "AERO",
-      name: "Pro-X1",
-      weightClass: "3U",
-      weightGramsRange: "85-89g",
-      balancePointMm: 298,
-      balanceCategory: "Head Heavy",
-      shaftFlexibility: "Stiff",
-      priceMyr: 450.00,
-      priceTier: "Mid-Range",
-      assetImagePath: "assets/images/racket_prox1.png",
-      description: "Stiff shaft and head-heavy framework optimized for clinical accuracy and hard hitters.",
+      brand: 'Yonex',
+      name: 'Astrox 100ZZ',
+      weightClass: '3U',
+      weightGramsRange: '85-89g',
+      balancePointMm: 308,
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Stiff',
+      priceMyr: 729.00,
+      priceTier: 'Premium',
+      assetImagePath: 'assets/images/astrox_100zz.png',
+      description: 'The flagship attacking racket built with a Hyper Slim Shaft and Namd graphite. Designed for advanced players seeking maximum smash velocity and hyper-fast shot recovery.',
     ),
     const Racket(
-      brand: "VOLT",
-      name: "Volt S3",
-      weightClass: "4U",
-      weightGramsRange: "80-84g",
+      brand: 'Yonex',
+      name: 'Nanoflare 800 Game',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 288,
+      balanceCategory: 'Head Light',
+      shaftFlexibility: 'Medium',
+      priceMyr: 380.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/nanoflare_800_game.png',
+      description: 'A speed-oriented racket engineered with a Sonic Flare System. Offers lightning-fast swing speeds, ideal for rapid drive exchanges and quick defensive counter-attacks.',
+    ),
+    const Racket(
+      brand: 'Yonex',
+      name: 'Arcsaber 11 Play',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 293,
+      balanceCategory: 'Even Balance',
+      shaftFlexibility: 'Flexible',
+      priceMyr: 189.00,
+      priceTier: 'Budget',
+      assetImagePath: 'assets/images/arcsaber_11_play.png',
+      description: 'An all-around control racket designed to hold the shuttlecock longer on the string bed. Perfect for club players seeking high accuracy, stability, and comfortable power generation.',
+    ),
+    const Racket(
+      brand: 'Yonex',
+      name: 'Nanoflare 170 Light',
+      weightClass: '5U',
+      weightGramsRange: '75-79g',
+      balancePointMm: 285,
+      balanceCategory: 'Head Light',
+      shaftFlexibility: 'Flexible',
+      priceMyr: 169.00,
+      priceTier: 'Budget',
+      assetImagePath: 'assets/images/nanoflare_170.png',
+      description: 'An ultra-lightweight, head-light racket designed for effortless maneuvering and swift reactions at the net. Highly recommended for developing players and junior athletes.',
+    ),
+
+    // LI-NING MODELS
+    const Racket(
+      brand: 'Li-Ning',
+      name: 'Axforce 90 Max',
+      weightClass: '3U',
+      weightGramsRange: '85-89g',
       balancePointMm: 305,
-      balanceCategory: "Head Heavy",
-      shaftFlexibility: "Stiff",
-      priceMyr: 280.00,
-      priceTier: "Budget",
-      assetImagePath: "assets/images/racket_volts3.png",
-      description: "High tension support and quick recoil capabilities make this budget head-heavy model ideal for fast offensive play.",
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Stiff',
+      priceMyr: 750.00,
+      priceTier: 'Premium',
+      assetImagePath: 'assets/images/axforce_90.png',
+      description: 'Built with TB Nano carbon fiber and a slim 6.2mm hard flexible shaft. Delivers concentrated power transmission for dominant single players and backcourt smashers.',
     ),
     const Racket(
-      brand: "Yonex",
-      name: "Astrox 88D Pro",
-      weightClass: "4U",
-      weightGramsRange: "80-84g",
-      balancePointMm: 301,
-      balanceCategory: "Head Heavy",
-      shaftFlexibility: "Stiff",
-      priceMyr: 820.00,
-      priceTier: "Premium",
-      assetImagePath: "assets/images/racket_astrox.png",
-      description: "Front/rear-court dominance weapon featuring a concentrated sweet spot and robust flex.",
+      brand: 'Li-Ning',
+      name: 'Axforce 70',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 300,
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Medium',
+      priceMyr: 480.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/axforce_70.png',
+      description: 'Features a box wing frame layout to maximize hitting power while maintaining smooth maneuverability. Great for aggressive intermediate players looking for accessible head-heavy power.',
     ),
     const Racket(
-      brand: "Li-Ning",
-      name: "Tectonic 7",
-      weightClass: "4U",
-      weightGramsRange: "80-84g",
+      brand: 'Li-Ning',
+      name: 'Halbertec 6000',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
       balancePointMm: 295,
-      balanceCategory: "Even Balance",
-      shaftFlexibility: "Medium",
-      priceMyr: 580.00,
-      priceTier: "Premium",
-      assetImagePath: "assets/images/racket_volts3.png",
-      description: "Forgiving frame structure offers elastic recovery rate and outstanding defense absorption.",
+      balanceCategory: 'Even Balance',
+      shaftFlexibility: 'Medium',
+      priceMyr: 420.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/halbertec_6000.png',
+      description: 'Designed with a frame system that balances elasticity and control. Excellent for tactical players who rely on precise shuttle placement, drop shots, and consistent rallies.',
+    ),
+    const Racket(
+      brand: 'Li-Ning',
+      name: 'BladeX 200',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 288,
+      balanceCategory: 'Head Light',
+      shaftFlexibility: 'Flexible',
+      priceMyr: 199.00,
+      priceTier: 'Budget',
+      assetImagePath: 'assets/images/bladex_200.png',
+      description: 'Focuses on rapid swing speeds and defensive agility. The flexible shaft assists developing players in generating court clearing depth with minimal arm strain.',
+    ),
+    const Racket(
+      brand: 'Li-Ning',
+      name: 'Windstorm 72',
+      weightClass: '7U/8U',
+      weightGramsRange: 'Below 70g',
+      balancePointMm: 312,
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Flexible',
+      priceMyr: 289.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/windstorm_72.png',
+      description: 'Super lightweight yet head-heavy. Designed specifically for fast doubles play, offering incredible reaction speed without forfeiting overhead smash power.',
+    ),
+
+    // VICTOR MODELS
+    const Racket(
+      brand: 'Victor',
+      name: 'Thruster Ryuga II',
+      weightClass: '3U',
+      weightGramsRange: '85-89g',
+      balancePointMm: 307,
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Stiff',
+      priceMyr: 650.00,
+      priceTier: 'Premium',
+      assetImagePath: 'assets/images/ryuga_2.png',
+      description: 'Equipped with WES 2.0 technology and a Free Core synthetic handle. Engineered for aggressive offensive play, delivering whipping smash angles and solid feel at impact.',
+    ),
+    const Racket(
+      brand: 'Victor',
+      name: 'Auraspeed 90K II',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 292,
+      balanceCategory: 'Head Light',
+      shaftFlexibility: 'Stiff',
+      priceMyr: 590.00,
+      priceTier: 'Premium',
+      assetImagePath: 'assets/images/auraspeed_90k.png',
+      description: 'Designed for high-speed flat drives and push attacks. Incorporates a Compound-Sword frame to reduce air resistance and deliver immediate rebound velocity.',
+    ),
+    const Racket(
+      brand: 'Victor',
+      name: 'DriveX 9X',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 295,
+      balanceCategory: 'Even Balance',
+      shaftFlexibility: 'Medium',
+      priceMyr: 520.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/drivex_9x.png',
+      description: 'A versatile all-around racket utilizing the Dynamic-Sword frame structure. Delivers smooth handling, excellent stability on touch shots, and balanced attacking power.',
+    ),
+    const Racket(
+      brand: 'Victor',
+      name: 'Thruster Hammer (TK-HMR)',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 300,
+      balanceCategory: 'Head Heavy',
+      shaftFlexibility: 'Flexible',
+      priceMyr: 169.00,
+      priceTier: 'Budget',
+      assetImagePath: 'assets/images/tk_hmr.png',
+      description: 'An entry-level power racket built with Power Box technology. Features a flexible shaft to help beginners produce high clears and smashes with less effort.',
+    ),
+    const Racket(
+      brand: 'Victor',
+      name: 'Auraspeed 30H',
+      weightClass: '4U',
+      weightGramsRange: '80-84g',
+      balancePointMm: 290,
+      balanceCategory: 'Head Light',
+      shaftFlexibility: 'Medium',
+      priceMyr: 210.00,
+      priceTier: 'Mid-Range',
+      assetImagePath: 'assets/images/auraspeed_30h.png',
+      description: 'High-tension durable speed racket capable of supporting up to 31 lbs. Great for fast-paced doubles defense and rapid net interceptions.',
     ),
   ];
 
@@ -309,7 +444,8 @@ class AppState extends ChangeNotifier {
       final path = racket.imagePath;
       final exists = await _checkAssetExists(path);
       if (exists) {
-        result.add(racket);
+        final actualPath = await _resolveActualAssetPath(path);
+        result.add(racket.copyWith(assetImagePath: actualPath));
       }
     }
     return result;
@@ -323,7 +459,45 @@ class AppState extends ChangeNotifier {
       await rootBundle.load(assetPath);
       return true;
     } catch (_) {
+      if (assetPath.endsWith('.png')) {
+        try {
+          final fallback = assetPath.replaceAll('.png', '.jpg');
+          await rootBundle.load(fallback);
+          return true;
+        } catch (_) {}
+      } else if (assetPath.endsWith('.jpg')) {
+        try {
+          final fallback = assetPath.replaceAll('.jpg', '.png');
+          await rootBundle.load(fallback);
+          return true;
+        } catch (_) {}
+      }
       return false;
+    }
+  }
+
+  Future<String> _resolveActualAssetPath(String assetPath) async {
+    if (assetPath.startsWith('http://') || assetPath.startsWith('https://')) {
+      return assetPath;
+    }
+    try {
+      await rootBundle.load(assetPath);
+      return assetPath;
+    } catch (_) {
+      if (assetPath.endsWith('.png')) {
+        final fallback = assetPath.replaceAll('.png', '.jpg');
+        try {
+          await rootBundle.load(fallback);
+          return fallback;
+        } catch (_) {}
+      } else if (assetPath.endsWith('.jpg')) {
+        final fallback = assetPath.replaceAll('.jpg', '.png');
+        try {
+          await rootBundle.load(fallback);
+          return fallback;
+        } catch (_) {}
+      }
+      return assetPath;
     }
   }
 
