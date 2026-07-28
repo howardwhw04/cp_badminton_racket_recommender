@@ -1,6 +1,8 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import '../providers/app_state.dart';
 import '../models/market_listing.dart';
 
@@ -15,7 +17,11 @@ class MarketplaceScreen extends StatelessWidget {
     final conditionController = TextEditingController(text: "Used - Like New");
     final durationController = TextEditingController(text: "3 Months Used");
     String selectedCategory = "Racquets";
+    String selectedBrand = "Yonex";
     bool isElite = false;
+    XFile? selectedImage;
+    Uint8List? selectedImageBytes;
+    bool isUploading = false;
 
     showModalBottomSheet(
       context: context,
@@ -53,6 +59,145 @@ class MarketplaceScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    // Image Picker Section
+                    _buildFormLabel("Racket Photo"),
+                    GestureDetector(
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 85,
+                        );
+                        if (image != null) {
+                          final bytes = await image.readAsBytes();
+                          setModalState(() {
+                            selectedImage = image;
+                            selectedImageBytes = bytes;
+                          });
+                        }
+                      },
+                      child: Container(
+                        height: 160,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D1622),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: selectedImageBytes != null
+                                ? const Color(0xFF00F5D4)
+                                : Colors.white.withValues(alpha: 0.08),
+                            width: 1.5,
+                          ),
+                          image: selectedImageBytes != null
+                              ? DecorationImage(
+                                  image: MemoryImage(selectedImageBytes!),
+                                  fit: BoxFit.cover,
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black.withValues(alpha: 0.3),
+                                    BlendMode.darken,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        child: selectedImageBytes != null
+                            ? Stack(
+                                children: [
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setModalState(() {
+                                          selectedImage = null;
+                                          selectedImageBytes = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20),
+                                        ),
+                                      ),
+                                      child: const Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.photo_library,
+                                            color: Color(0xFF00F5D4),
+                                            size: 16,
+                                          ),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            "Tap to change photo",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontFamily: 'Inter',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.cloud_upload_outlined,
+                                    size: 40,
+                                    color: const Color(0xFF00F5D4).withValues(
+                                      alpha: 0.8,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text(
+                                    "TAP TO UPLOAD PHOTO",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Orbitron',
+                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Supports PNG, JPG, JPEG",
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      fontSize: 11,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     // Item Title
                     _buildFormLabel("Item Title"),
                     TextField(
@@ -136,42 +281,107 @@ class MarketplaceScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    // Category dropdown
-                    _buildFormLabel("Category"),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0D1622),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white10),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedCategory,
-                          dropdownColor: const Color(0xFF111C28),
-                          iconEnabledColor: const Color(0xFF00F5D4),
-                          isExpanded: true,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Inter',
+                    // Category & Brand Row
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildFormLabel("Category"),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0D1622),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedCategory,
+                                    dropdownColor: const Color(0xFF111C28),
+                                    iconEnabledColor: const Color(0xFF00F5D4),
+                                    isExpanded: true,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                    ),
+                                    items: ["Racquets", "Footwear", "Bags", "Accessories"]
+                                        .map((cat) {
+                                          return DropdownMenuItem(
+                                            value: cat,
+                                            child: Text(cat),
+                                          );
+                                        })
+                                        .toList(),
+                                    onChanged: (val) {
+                                      if (val != null) {
+                                        setModalState(() {
+                                          selectedCategory = val;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          items: ["Racquets", "Footwear", "Bags", "Accessories"]
-                              .map((cat) {
-                                return DropdownMenuItem(
-                                  value: cat,
-                                  child: Text(cat),
-                                );
-                              })
-                              .toList(),
-                          onChanged: (val) {
-                            if (val != null) {
-                              setModalState(() {
-                                selectedCategory = val;
-                              });
-                            }
-                          },
                         ),
-                      ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildFormLabel("Brand"),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0D1622),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedBrand,
+                                    dropdownColor: const Color(0xFF111C28),
+                                    iconEnabledColor: const Color(0xFF00F5D4),
+                                    isExpanded: true,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Inter',
+                                      fontSize: 14,
+                                    ),
+                                    items: ["Yonex", "Li-Ning", "Victor", "Other"]
+                                        .map((b) {
+                                          return DropdownMenuItem(
+                                            value: b,
+                                            child: Text(b == "Other" ? "Others" : b),
+                                          );
+                                        })
+                                        .toList(),
+                                    onChanged: (val) {
+                                      if (val != null) {
+                                        setModalState(() {
+                                          selectedBrand = val;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     // Elite Tag Switch
@@ -198,68 +408,147 @@ class MarketplaceScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    // Submit Button
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          final price =
-                              double.tryParse(priceController.text) ?? 0.0;
-                          final sellerId = Supabase.instance.client.auth.currentUser?.id ?? '00000000-0000-0000-0000-000000000000';
-                          final newListing = MarketListing(
-                            sellerId: sellerId,
-                            title: titleController.text.isNotEmpty
-                                ? titleController.text
-                                : "AEROCORE Custom Racket",
-                            brand: selectedCategory == "Racquets" ? "Yonex" : "Other",
-                            priceMyr: price,
-                            imageUrl: selectedCategory == "Footwear"
-                                ? "assets/images/market_shoes.png"
-                                : selectedCategory == "Bags"
-                                ? "assets/images/market_bag.png"
-                                : "assets/images/racket_volts3.png",
-                            itemCondition: conditionController.text.isNotEmpty
-                                ? conditionController.text
-                                : "Used - Like New",
-                            location: locationController.text.isNotEmpty
-                                ? locationController.text
-                                : "Malaysia",
-                          );
-                          
-                          try {
-                            await state.addMarketListing(newListing);
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: const Color(0xFF111C28),
-                                  content: Text(
-                                    "Error listing item: $e",
-                                    style: const TextStyle(color: Colors.redAccent),
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
+                        onPressed: isUploading
+                            ? null
+                            : () async {
+                                final price =
+                                    double.tryParse(priceController.text) ?? 0.0;
+                                final sellerId = Supabase
+                                        .instance.client.auth.currentUser?.id ??
+                                    '00000000-0000-0000-0000-000000000000';
+
+                                String finalImageUrl =
+                                    selectedCategory == "Footwear"
+                                        ? "assets/images/market_shoes.png"
+                                        : selectedCategory == "Bags"
+                                            ? "assets/images/market_bag.png"
+                                            : "assets/images/racket_volts3.png";
+
+                                if (selectedImage != null &&
+                                    selectedImageBytes != null) {
+                                  try {
+                                    setModalState(() {
+                                      isUploading = true;
+                                    });
+
+                                    final fileName =
+                                        '${DateTime.now().millisecondsSinceEpoch}_${selectedImage!.name}';
+                                    await Supabase.instance.client.storage
+                                        .from('marketplace-images')
+                                        .uploadBinary(
+                                          fileName,
+                                          selectedImageBytes!,
+                                          fileOptions: const FileOptions(
+                                            contentType: 'image/jpeg',
+                                            upsert: true,
+                                          ),
+                                        );
+
+                                    finalImageUrl = Supabase
+                                        .instance.client.storage
+                                        .from('marketplace-images')
+                                        .getPublicUrl(fileName);
+                                  } catch (uploadErr) {
+                                    debugPrint("Error uploading image: $uploadErr");
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          backgroundColor:
+                                              const Color(0xFF111C28),
+                                          content: Text(
+                                            "Image upload failed: $uploadErr",
+                                            style: const TextStyle(
+                                                color: Colors.redAccent),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    setModalState(() {
+                                      isUploading = false;
+                                    });
+                                    return;
+                                  }
+                                }
+
+                                final newListing = MarketListing(
+                                  sellerId: sellerId,
+                                  title: titleController.text.isNotEmpty
+                                      ? titleController.text
+                                      : "AEROCORE Custom Racket",
+                                  brand: selectedBrand,
+                                  priceMyr: price,
+                                  imageUrl: finalImageUrl,
+                                  itemCondition:
+                                      conditionController.text.isNotEmpty
+                                          ? conditionController.text
+                                          : "Used - Like New",
+                                  location: locationController.text.isNotEmpty
+                                      ? locationController.text
+                                      : "Malaysia",
+                                );
+
+                                try {
+                                  if (selectedImage == null) {
+                                    setModalState(() {
+                                      isUploading = true;
+                                    });
+                                  }
+                                  await state.addMarketListing(newListing);
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                  }
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                      SnackBar(
+                                        backgroundColor:
+                                            const Color(0xFF111C28),
+                                        content: Text(
+                                          "Error listing item: $e",
+                                          style: const TextStyle(
+                                              color: Colors.redAccent),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  setModalState(() {
+                                    isUploading = false;
+                                  });
+                                }
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00F5D4),
                           foregroundColor: const Color(0xFF0D1622),
+                          disabledBackgroundColor:
+                              const Color(0xFF00F5D4).withValues(alpha: 0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          "SUBMIT LISTING",
-                          style: TextStyle(
-                            fontFamily: 'Orbitron',
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child: isUploading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFF0D1622),
+                                  ),
+                                ),
+                              )
+                            : const Text(
+                                "SUBMIT LISTING",
+                                style: TextStyle(
+                                  fontFamily: 'Orbitron',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -440,13 +729,25 @@ class MarketplaceScreen extends StatelessWidget {
                                     height: 130,
                                     width: double.infinity,
                                     color: const Color(0xFF0A0F18),
-                                    child: Image.asset(
-                                      item.imagePath,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Container(color: Colors.black26),
-                                    ),
+                                    child: item.imagePath.startsWith('http')
+                                        ? Image.network(
+                                            item.imagePath,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                Container(
+                                                  color: Colors.black26,
+                                                  child: const Icon(Icons.broken_image, color: Colors.white24),
+                                                ),
+                                          )
+                                        : Image.asset(
+                                            item.imagePath,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                Container(
+                                                  color: Colors.black26,
+                                                  child: const Icon(Icons.broken_image, color: Colors.white24),
+                                                ),
+                                          ),
                                   ),
                                 ),
                                 // Ribbon Tag top-left

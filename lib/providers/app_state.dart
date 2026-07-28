@@ -13,6 +13,13 @@ class AppState extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   String get email => _email;
 
+  String get displayName {
+    if (!_isLoggedIn) return 'Anonymous Player';
+    final user = _supabase.auth.currentUser;
+    final metadata = user?.userMetadata;
+    return metadata?['display_name'] as String? ?? metadata?['full_name'] as String? ?? 'Elite Athlete';
+  }
+
   // User Profile Statistics (database backed)
   int _matches = 0;
   int _winRate = 0;
@@ -40,13 +47,15 @@ class AppState extends ChangeNotifier {
   int get currentQuizStep => _currentQuizStep;
 
   AppState() {
+    // Always load static rackets from Supabase on startup
+    fetchRackets();
+
     // Check initial session
     final session = _supabase.auth.currentSession;
     _isLoggedIn = session != null;
     _email = session?.user.email ?? '';
     if (_isLoggedIn) {
       fetchUserProfile();
-      fetchRackets();
       fetchMarketListings();
     }
 
@@ -57,7 +66,6 @@ class AppState extends ChangeNotifier {
       _email = session?.user.email ?? '';
       if (_isLoggedIn) {
         fetchUserProfile();
-        fetchRackets();
         fetchMarketListings();
       } else {
         _resetProfile();
@@ -133,6 +141,42 @@ class AppState extends ChangeNotifier {
     await updateUserProfile();
   }
 
+  Future<void> updateFullProfile({
+    String? displayName,
+    required int skillLevel,
+    required int matches,
+    required int winRate,
+    required int powerIndex,
+    required int control,
+    required String playingStyle,
+    required bool hasLowStrength,
+    required String matchType,
+    required String preferredBudgetTier,
+  }) async {
+    _selectedSkillLevelIndex = skillLevel;
+    _matches = matches;
+    _winRate = winRate;
+    _powerIndex = powerIndex;
+    _control = control;
+    _playingStyle = playingStyle;
+    _hasLowStrength = hasLowStrength;
+    _matchType = matchType;
+    _preferredBudgetTier = preferredBudgetTier;
+
+    if (displayName != null && _isLoggedIn) {
+      await _supabase.auth.updateUser(
+        UserAttributes(
+          data: {
+            'display_name': displayName,
+          },
+        ),
+      );
+    }
+
+    notifyListeners();
+    await updateUserProfile();
+  }
+
   void _resetProfile() {
     _selectedSkillLevelIndex = 1;
     _matches = 0;
@@ -144,7 +188,6 @@ class AppState extends ChangeNotifier {
     _matchType = 'Singles';
     _preferredBudgetTier = 'Mid-Range';
     _currentQuizStep = 0;
-    _dbRackets.clear();
     _marketListings.clear();
   }
 
