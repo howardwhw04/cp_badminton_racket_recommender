@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/racket.dart';
 import '../models/market_listing.dart';
@@ -49,6 +50,7 @@ class AppState extends ChangeNotifier {
   AppState() {
     // Always load static rackets from Supabase on startup
     fetchRackets();
+    _initializeFallbackRackets();
 
     // Check initial session
     final session = _supabase.auth.currentSession;
@@ -294,20 +296,53 @@ class AppState extends ChangeNotifier {
     ),
   ];
 
+  List<Racket> _filteredFallbackRackets = [];
+
+  Future<void> _initializeFallbackRackets() async {
+    _filteredFallbackRackets = await _filterRacketsWithExistingAssets(_rackets);
+    notifyListeners();
+  }
+
+  Future<List<Racket>> _filterRacketsWithExistingAssets(List<Racket> inputList) async {
+    final List<Racket> result = [];
+    for (final racket in inputList) {
+      final path = racket.imagePath;
+      final exists = await _checkAssetExists(path);
+      if (exists) {
+        result.add(racket);
+      }
+    }
+    return result;
+  }
+
+  Future<bool> _checkAssetExists(String assetPath) async {
+    if (assetPath.startsWith('http://') || assetPath.startsWith('https://')) {
+      return true;
+    }
+    try {
+      await rootBundle.load(assetPath);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> fetchRackets() async {
     _isLoadingRackets = true;
     notifyListeners();
     try {
       final List<dynamic> data = await _supabase.from('rackets').select();
+      List<Racket> fetchedRackets = [];
       if (data.isNotEmpty) {
-        _dbRackets = data.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
+        fetchedRackets = data.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
       } else {
         debugPrint("Supabase rackets table is empty. Seeding fallback rackets...");
         final racketsJson = _rackets.map((r) => r.toJson()).toList();
         await _supabase.from('rackets').insert(racketsJson);
         final List<dynamic> refetched = await _supabase.from('rackets').select();
-        _dbRackets = refetched.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
+        fetchedRackets = refetched.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
       }
+      _dbRackets = await _filterRacketsWithExistingAssets(fetchedRackets);
     } catch (e) {
       debugPrint("Error fetching rackets from Supabase: $e");
     } finally {
@@ -445,12 +480,16 @@ class AppState extends ChangeNotifier {
   }
 
   List<Racket> get rackets {
-    final list = _dbRackets.isNotEmpty ? _dbRackets : _rackets;
+    final list = _dbRackets.isNotEmpty
+        ? _dbRackets
+        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
     return list.map((racket) => _calculateCompatibility(racket)).toList();
   }
 
   List<Racket> get dbRackets {
-    final list = _dbRackets.isNotEmpty ? _dbRackets : _rackets;
+    final list = _dbRackets.isNotEmpty
+        ? _dbRackets
+        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
     return list.map((racket) => _calculateCompatibility(racket)).toList();
   }
 
