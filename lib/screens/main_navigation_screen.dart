@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import 'login_screen.dart';
 import 'quiz_screen.dart';
-import 'recommendation_screen.dart';
 import 'comparison_screen.dart';
 import 'marketplace_screen.dart';
 import 'profile_screen.dart';
@@ -18,42 +17,6 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-
-  // Let's create a combined Compare tab screen that switches between Recommendation and Comparison.
-  Widget _buildCompareTab(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0D1622),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
-          child: Container(
-            color: const Color(0xFF0A0F18),
-            child: const SafeArea(
-              child: TabBar(
-                indicatorColor: Color(0xFF00F5D4),
-                labelColor: Color(0xFF00F5D4),
-                unselectedLabelColor: Colors.grey,
-                labelStyle: TextStyle(
-                  fontFamily: 'Orbitron',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  letterSpacing: 1.1,
-                ),
-                tabs: [
-                  Tab(text: "AI MATCH"),
-                  Tab(text: "COMPARISON"),
-                ],
-              ),
-            ),
-          ),
-        ),
-        body: const TabBarView(
-          children: [RecommendationScreen(), ComparisonScreen()],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +33,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final List<Widget> screens = [
       const HomeDashboard(), // Tab 0: Home
       const QuizScreen(), // Tab 1: Quiz
-      _buildCompareTab(context), // Tab 2: Compare
+      const ComparisonScreen(), // Tab 2: Compare
       const MarketplaceScreen(), // Tab 3: Market
       const ProfileScreen(), // Tab 4: Profile
     ];

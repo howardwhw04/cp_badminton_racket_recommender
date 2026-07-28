@@ -41,7 +41,19 @@ class Racket {
   int get balanceValue => balancePointMm;
   String get balanceText => balanceCategory;
   String get flex => shaftFlexibility;
-  String get imagePath => assetImagePath;
+  String get imagePath {
+    if (id == 1) return 'assets/images/1.png';
+    if (id == 2) return 'assets/images/2.png';
+    if (id == 3) return 'assets/images/3.jpg';
+    
+    if (assetImagePath.startsWith('http://') || assetImagePath.startsWith('https://')) {
+      return assetImagePath;
+    }
+    if (assetImagePath.startsWith('assets/images/')) {
+      return assetImagePath;
+    }
+    return 'assets/images/$assetImagePath';
+  }
 
   factory Racket.fromJson(Map<String, dynamic> json) {
     return Racket(

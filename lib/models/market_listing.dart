@@ -23,7 +23,15 @@ class MarketListing {
 
   // Backwards compatibility properties for existing UI (MarketplaceItem)
   double get price => priceMyr;
-  String get imagePath => imageUrl;
+  String get imagePath {
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    if (imageUrl.startsWith('assets/images/')) {
+      return imageUrl;
+    }
+    return 'assets/images/$imageUrl';
+  }
   String get condition => itemCondition;
   String get tag => brand == 'Other' ? '' : brand.toUpperCase();
   String get category => _inferCategory(title);
