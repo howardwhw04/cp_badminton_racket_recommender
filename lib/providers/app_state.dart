@@ -781,6 +781,38 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  Future<void> updateMarketListing(MarketListing listing) async {
+    try {
+      final json = listing.toJson();
+      final response = await _supabase
+          .from('market_listings')
+          .update(json)
+          .eq('id', listing.id!)
+          .select()
+          .single();
+      final updated = MarketListing.fromJson(response);
+      final index = _marketListings.indexWhere((l) => l.id == listing.id);
+      if (index != -1) {
+        _marketListings[index] = updated;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error updating market listing: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> deleteMarketListing(String id) async {
+    try {
+      await _supabase.from('market_listings').delete().eq('id', id);
+      _marketListings.removeWhere((l) => l.id == id);
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error deleting market listing: $e");
+      rethrow;
+    }
+  }
+
   String _selectedMarketFilter = "All Items";
   String get selectedMarketFilter => _selectedMarketFilter;
 

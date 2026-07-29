@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/app_state.dart';
 import '../models/market_listing.dart';
+import 'my_listings_screen.dart';
 
 class MarketplaceScreen extends StatelessWidget {
   const MarketplaceScreen({super.key});
@@ -562,6 +563,215 @@ class MarketplaceScreen extends StatelessWidget {
     );
   }
 
+  void _showListingDetailSheet(BuildContext context, MarketListing item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF111C28),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  height: 240,
+                  width: double.infinity,
+                  color: const Color(0xFF0A0F18),
+                  child: item.imagePath.startsWith('http')
+                      ? Image.network(
+                          item.imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
+                        )
+                      : Image.asset(
+                          item.imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              if (item.tag.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00F5D4).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFF00F5D4), width: 1),
+                  ),
+                  child: Text(
+                    item.tag,
+                    style: const TextStyle(
+                      color: Color(0xFF00F5D4),
+                      fontFamily: 'Orbitron',
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 10),
+              Text(
+                item.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Orbitron',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "RM ${item.price.toStringAsFixed(2)}",
+                style: const TextStyle(
+                  color: Color(0xFF00F5D4),
+                  fontFamily: 'Orbitron',
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Divider(color: Colors.white12),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDetailTile(Icons.history, "Condition", item.condition),
+                  ),
+                  Expanded(
+                    child: _buildDetailTile(Icons.location_on_outlined, "Location", item.location),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDetailTile(Icons.category_outlined, "Category", item.category),
+                  ),
+                  Expanded(
+                    child: _buildDetailTile(
+                      Icons.calendar_today_outlined, 
+                      "Posted On", 
+                      item.createdAt != null 
+                          ? "${item.createdAt!.day}/${item.createdAt!.month}/${item.createdAt!.year}" 
+                          : "N/A"
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: const Color(0xFF111C28),
+                        title: const Text(
+                          "Contact Seller",
+                          style: TextStyle(fontFamily: 'Orbitron', color: Color(0xFF00F5D4)),
+                        ),
+                        content: const Text(
+                          "Chat integration is coming soon! For now, you can coordinate transactions through the standard community channels.",
+                          style: TextStyle(fontFamily: 'Inter', color: Colors.white70),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("OK", style: TextStyle(color: Color(0xFF00F5D4))),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: const Text(
+                    "CONTACT SELLER",
+                    style: TextStyle(
+                      fontFamily: 'Orbitron',
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00F5D4),
+                    foregroundColor: const Color(0xFF0D1622),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailTile(IconData icon, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: const Color(0xFF00F5D4), size: 20),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white30,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
+                  fontFamily: 'Inter',
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildFormLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
@@ -633,6 +843,26 @@ class MarketplaceScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF0D1622),
         elevation: 0,
         automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyListingsScreen()),
+              );
+            },
+            child: const Text(
+              "My Listing",
+              style: TextStyle(
+                color: Color(0xFF00F5D4),
+                fontFamily: 'Orbitron',
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -705,8 +935,10 @@ class MarketplaceScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
 
-                      return Container(
-                        decoration: BoxDecoration(
+                      return GestureDetector(
+                        onTap: () => _showListingDetailSheet(context, item),
+                        child: Container(
+                          decoration: BoxDecoration(
                           color: const Color(0xFF111C28),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
@@ -864,8 +1096,9 @@ class MarketplaceScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
                   ),
           ),
         ],
