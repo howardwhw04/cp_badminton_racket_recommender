@@ -415,7 +415,7 @@ class AppState extends ChangeNotifier {
       shaftFlexibility: 'Flexible',
       priceMyr: 169.00,
       priceTier: 'Budget',
-      assetImagePath: 'assets/images/tk_hmr.jpg',
+      assetImagePath: 'assets/images/tk_hmr.png',
       description: 'An entry-level power racket built with Power Box technology. Features a flexible shaft to help beginners produce high clears and smashes with less effort.',
     ),
     const Racket(
