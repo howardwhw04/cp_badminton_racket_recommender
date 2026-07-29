@@ -56,6 +56,12 @@ CREATE POLICY "Anyone can view market listings" ON market_listings FOR SELECT US
 DROP POLICY IF EXISTS "Users can create own listings" ON market_listings;
 CREATE POLICY "Users can create own listings" ON market_listings FOR INSERT WITH CHECK (auth.uid() = seller_id);
 
+DROP POLICY IF EXISTS "Users can update own listings" ON market_listings;
+CREATE POLICY "Users can update own listings" ON market_listings FOR UPDATE USING (auth.uid() = seller_id);
+
+DROP POLICY IF EXISTS "Users can delete own listings" ON market_listings;
+CREATE POLICY "Users can delete own listings" ON market_listings FOR DELETE USING (auth.uid() = seller_id);
+
 -- 4. SUPABASE STORAGE BUCKET FOR MARKETPLACE IMAGES
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('marketplace-images', 'marketplace-images', true)
