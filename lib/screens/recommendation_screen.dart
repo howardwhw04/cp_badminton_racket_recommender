@@ -202,7 +202,7 @@ class RecommendationScreen extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    recommended.matchExplanation,
+                                    recommended.matchExplanation.replaceAll('; ', '\n• '),
                                     style: TextStyle(
                                       color: Colors.white.withValues(
                                         alpha: 0.85,

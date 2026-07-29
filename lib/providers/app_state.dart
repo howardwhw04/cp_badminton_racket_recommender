@@ -3,6 +3,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/racket.dart';
 import '../models/market_listing.dart';
+import '../models/user_profile.dart';
+import '../services/recommendation_service.dart';
 
 class AppState extends ChangeNotifier {
   final SupabaseClient _supabase = Supabase.instance.client;
@@ -653,18 +655,34 @@ class AppState extends ChangeNotifier {
     );
   }
 
+  UserProfile get userProfile => UserProfile(
+        id: _supabase.auth.currentUser?.id ?? '',
+        skillLevel: _selectedSkillLevelIndex,
+        matches: _matches,
+        winRate: _winRate,
+        powerIndex: _powerIndex,
+        control: _control,
+        playingStyle: _playingStyle,
+        hasLowStrength: _hasLowStrength,
+        matchType: _matchType,
+        preferredBudgetTier: _preferredBudgetTier,
+        updatedAt: DateTime.now(),
+      );
+
   List<Racket> get rackets {
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
         : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
-    return list.map((racket) => _calculateCompatibility(racket)).toList();
+    final service = RecommendationService();
+    return list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
   }
 
   List<Racket> get dbRackets {
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
         : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
-    return list.map((racket) => _calculateCompatibility(racket)).toList();
+    final service = RecommendationService();
+    return list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
   }
 
   // Comparison State
@@ -822,15 +840,23 @@ class AppState extends ChangeNotifier {
   }
 
   Racket get recommendedRacket {
-    final list = rackets;
-    if (list.isEmpty) return _rackets[0];
-    Racket best = list[0];
-    for (var r in list) {
-      if (r.matchRating > best.matchRating) {
-        best = r;
+    final service = RecommendationService();
+    final list = _dbRackets.isNotEmpty
+        ? _dbRackets
+        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
+    final recommendationsMap = service.getRecommendationsFromList(userProfile, list);
+    if (recommendationsMap.isEmpty) {
+      final scoredList = list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
+      return scoredList[0];
+    }
+    // Choose the best one among the recommendations
+    Racket? best;
+    for (var racket in recommendationsMap.values) {
+      if (best == null || racket.matchRating > best.matchRating) {
+        best = racket;
       }
     }
-    return best;
+    return best ?? service.scoreRacket(list[0], userProfile);
   }
 }
 

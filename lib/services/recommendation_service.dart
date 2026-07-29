@@ -83,6 +83,20 @@ class RecommendationService {
     return topRecommendations;
   }
 
+  /// Evaluates and scores a single racket for a given user profile, applying KBS pruning.
+  Racket scoreRacket(Racket racket, UserProfile profile) {
+    final bool isBeginnerOrLowStrength =
+        profile.hasLowStrength || profile.skillLevel == 0;
+    if (isBeginnerOrLowStrength && racket.shaftFlexibility.toLowerCase() == 'stiff') {
+      return racket.copyWith(
+        matchRating: 0,
+        matchExplanation: 'KBS Warning: Stiff shafts are locked for beginners or players with lower arm strength to avoid injury.',
+      );
+    }
+    final double rawScore = _calculateRawCompatibility(racket, profile);
+    return _buildScoredRacket(racket, profile, rawScore);
+  }
+
   /// Calculates the raw compatibility score of a racket.
   double _calculateRawCompatibility(Racket racket, UserProfile profile) {
     const double baseValue = 50.0;
