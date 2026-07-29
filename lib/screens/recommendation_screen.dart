@@ -3,13 +3,38 @@ import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import '../widgets/custom_button.dart';
 
-class RecommendationScreen extends StatelessWidget {
+class RecommendationScreen extends StatefulWidget {
   const RecommendationScreen({super.key});
+
+  @override
+  State<RecommendationScreen> createState() => _RecommendationScreenState();
+}
+
+class _RecommendationScreenState extends State<RecommendationScreen> {
+  int _selectedRacketIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
-    final recommended = state.recommendedRacket;
+    final recommendedList = state.recommendedRackets;
+
+    if (recommendedList.isEmpty) {
+      return const Scaffold(
+        backgroundColor: Color(0xFF0D1622),
+        body: Center(
+          child: Text(
+            "No recommendations found.",
+            style: TextStyle(color: Colors.white60, fontFamily: 'Inter'),
+          ),
+        ),
+      );
+    }
+
+    if (_selectedRacketIndex >= recommendedList.length) {
+      _selectedRacketIndex = 0;
+    }
+
+    final recommended = recommendedList[_selectedRacketIndex];
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D1622),
@@ -19,6 +44,59 @@ class RecommendationScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Segmented selection bar for top 3
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF111C28),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.04),
+                  ),
+                ),
+                child: Row(
+                  children: List.generate(recommendedList.length, (index) {
+                    final isSelected = _selectedRacketIndex == index;
+                    final racket = recommendedList[index];
+                    final label = "${index + 1}. ${racket.priceTier.toUpperCase()}";
+
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedRacketIndex = index;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? const Color(0xFF00F5D4)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              label,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? const Color(0xFF0D1622)
+                                    : Colors.white70,
+                                fontFamily: 'Orbitron',
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(height: 20),
+
               // Product Showcase Card
               Container(
                 width: double.infinity,
@@ -74,9 +152,9 @@ class RecommendationScreen extends StatelessWidget {
                               color: const Color(0xFF00F5D4),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text(
-                              "TOP RANKED",
-                              style: TextStyle(
+                            child: Text(
+                              _selectedRacketIndex == 0 ? "TOP RANKED" : "MATCH OPTION ${_selectedRacketIndex + 1}",
+                              style: const TextStyle(
                                 color: Color(0xFF0D1622),
                                 fontFamily: 'Orbitron',
                                 fontSize: 10,
@@ -233,9 +311,9 @@ class RecommendationScreen extends StatelessWidget {
                     SnackBar(
                       backgroundColor: const Color(0xFF111C28),
                       content: Text(
-                        "Navigating to detailed structural engineering analysis...",
-                        style: TextStyle(
-                          color: const Color(0xFF00F5D4),
+                        "Navigating to detailed structural engineering analysis for ${recommended.name}...",
+                        style: const TextStyle(
+                          color: Color(0xFF00F5D4),
                           fontFamily: 'Inter',
                         ),
                       ),
