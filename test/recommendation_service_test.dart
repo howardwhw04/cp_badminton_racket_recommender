@@ -67,7 +67,7 @@ void main() {
         shaftFlexibility: 'Stiff',
         priceMyr: 450.0,
         priceTier: 'Mid-Range',
-        assetImagePath: 'racket_prox1.png',
+        assetImagePath: 'racket_astrox.png',
         description: 'Mid range stiff racket',
       ),
       const Racket(
@@ -80,7 +80,7 @@ void main() {
         shaftFlexibility: 'Flexible',
         priceMyr: 380.0,
         priceTier: 'Mid-Range',
-        assetImagePath: 'racket_prox1.png',
+        assetImagePath: 'racket_astrox.png',
         description: 'Mid range flexible racket',
       ),
       const Racket(
