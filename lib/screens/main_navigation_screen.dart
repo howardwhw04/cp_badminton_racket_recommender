@@ -151,7 +151,6 @@ class HomeDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
-    final recommended = state.recommendedRacket;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D1622),
