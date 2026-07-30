@@ -392,14 +392,14 @@ class RecommendationService {
     addAttr('Style vs Balance', styleBalanceContribution, styleReason);
     addAttr('Match Type Fit', matchTypeContribution, matchReason);
 
-    final String SHAPExplanation =
+    final String shapExplanation =
         'SHAP explainable AI report: Base prediction is ${baseValue.toStringAsFixed(0)}%. '
         'Attribution contributions: ${attributions.join("; ")}. '
         'Total match compatibility: $finalRating%.';
 
     return racket.copyWith(
       matchRating: finalRating,
-      matchExplanation: SHAPExplanation,
+      matchExplanation: shapExplanation,
     );
   }
 }
