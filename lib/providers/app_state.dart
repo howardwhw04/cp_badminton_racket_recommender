@@ -839,7 +839,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Racket get recommendedRacket {
+  List<Racket> get recommendedRackets {
     final service = RecommendationService();
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
@@ -847,16 +847,24 @@ class AppState extends ChangeNotifier {
     final recommendationsMap = service.getRecommendationsFromList(userProfile, list);
     if (recommendationsMap.isEmpty) {
       final scoredList = list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
-      return scoredList[0];
+      scoredList.sort((a, b) => b.matchRating.compareTo(a.matchRating));
+      return scoredList.take(3).toList();
     }
-    // Choose the best one among the recommendations
-    Racket? best;
-    for (var racket in recommendationsMap.values) {
-      if (best == null || racket.matchRating > best.matchRating) {
-        best = racket;
-      }
+    final recommendations = recommendationsMap.values.toList();
+    recommendations.sort((a, b) => b.matchRating.compareTo(a.matchRating));
+    return recommendations;
+  }
+
+  Racket get recommendedRacket {
+    final list = recommendedRackets;
+    if (list.isEmpty) {
+      final listRaw = _dbRackets.isNotEmpty
+          ? _dbRackets
+          : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
+      final service = RecommendationService();
+      return service.scoreRacket(listRaw[0], userProfile);
     }
-    return best ?? service.scoreRacket(list[0], userProfile);
+    return list.first;
   }
 }
 
