@@ -567,25 +567,50 @@ class MarketplaceScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  height: 240,
-                  width: double.infinity,
-                  color: const Color(0xFF0A0F18),
-                  child: item.imagePath.startsWith('http')
-                      ? Image.network(
-                          item.imagePath,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
-                        )
-                      : Image.asset(
-                          item.imagePath,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
+              GestureDetector(
+                onTap: () => _showBiggerImage(context, item.imagePath, item.title),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    height: 240,
+                    width: double.infinity,
+                    color: const Color(0xFF0A0F18),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: item.imagePath.startsWith('http')
+                              ? Image.network(
+                                  item.imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
+                                )
+                              : Image.asset(
+                                  item.imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 50)),
+                                ),
                         ),
+                        Positioned(
+                          bottom: 12,
+                          right: 12,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.fullscreen,
+                              color: Color(0xFF00F5D4),
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -707,6 +732,93 @@ class MarketplaceScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  // Visual helper method to display a listing's image in full screen with pinch-to-zoom
+  void _showBiggerImage(BuildContext context, String imagePath, String title) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF111C28),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: const Color(0xFF00F5D4).withValues(alpha: 0.5),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                title.toUpperCase(),
+                style: const TextStyle(
+                  fontFamily: 'Orbitron',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF00F5D4),
+                ),
+              ),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: InteractiveViewer(
+                  panEnabled: true,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: imagePath.startsWith('http')
+                      ? Image.network(
+                          imagePath,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            height: 200,
+                            color: Colors.black38,
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.white24,
+                              size: 64,
+                            ),
+                          ),
+                        )
+                      : Image.asset(
+                          imagePath,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            height: 200,
+                            color: Colors.black38,
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.white24,
+                              size: 64,
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
