@@ -99,6 +99,42 @@ class RecommendationService {
 
   /// Calculates the raw compatibility score of a racket.
   double _calculateRawCompatibility(Racket racket, UserProfile profile) {
+    return _evaluateCompatibility(racket, profile).totalScore;
+  }
+
+  /// Builds a scored Racket instance with clamped rating and simulated SHAP explanation.
+  Racket _buildScoredRacket(Racket racket, UserProfile profile, double rawScore) {
+    final details = _evaluateCompatibility(racket, profile);
+    const double baseValue = 50.0;
+    final int finalRating = details.totalScore.clamp(0.0, 100.0).round();
+
+    // Construct Simulated SHAP feature attribution explanation
+    final List<String> attributions = [];
+    void addAttr(String featureName, double contribution, String reason) {
+      final String sign = contribution >= 0 ? '+' : '';
+      attributions.add(
+        '$featureName: $sign${contribution.toStringAsFixed(0)}% ($reason)',
+      );
+    }
+
+    addAttr('Budget Fit', details.budgetContribution, details.budgetReason);
+    addAttr('Skill vs Flexibility', details.skillFlexContribution, details.skillReason);
+    addAttr('Strength vs Weight', details.strengthWeightContribution, details.strengthReason);
+    addAttr('Style vs Balance', details.styleBalanceContribution, details.styleReason);
+    addAttr('Match Type Fit', details.matchTypeContribution, details.matchReason);
+
+    final String shapExplanation =
+        'SHAP explainable AI report: Base prediction is ${baseValue.toStringAsFixed(0)}%. '
+        'Attribution contributions: ${attributions.join("; ")}. '
+        'Total match compatibility: $finalRating%.';
+
+    return racket.copyWith(
+      matchRating: finalRating,
+      matchExplanation: shapExplanation,
+    );
+  }
+
+  _CompatibilityDetails _evaluateCompatibility(Racket racket, UserProfile profile) {
     const double baseValue = 50.0;
 
     double budgetContribution = 0.0;
@@ -108,133 +144,6 @@ class RecommendationService {
     double matchTypeContribution = 0.0;
 
     // 1. Budget Preference vs Racket Price Tier
-    final String prefTier = profile.preferredBudgetTier.toLowerCase();
-    final String rackTier = racket.priceTier.toLowerCase();
-    if (rackTier == prefTier) {
-      budgetContribution = 20.0;
-    } else {
-      final List<String> tiers = ['budget', 'mid-range', 'premium'];
-      final int rackIdx = tiers.indexOf(rackTier);
-      final int prefIdx = tiers.indexOf(prefTier);
-      if (rackIdx != -1 && prefIdx != -1) {
-        final int distance = (rackIdx - prefIdx).abs();
-        if (distance == 1) {
-          budgetContribution = 10.0;
-        } else {
-          budgetContribution = -10.0;
-        }
-      }
-    }
-
-    // 2. Skill Level vs Shaft Flexibility
-    final int skill = profile.skillLevel;
-    final String flex = racket.shaftFlexibility.toLowerCase();
-    if (skill == 0) {
-      if (flex == 'flexible') {
-        skillFlexContribution = 20.0;
-      } else if (flex == 'medium') {
-        skillFlexContribution = 10.0;
-      } else {
-        skillFlexContribution = -15.0;
-      }
-    } else if (skill == 1) {
-      if (flex == 'medium') {
-        skillFlexContribution = 20.0;
-      } else {
-        skillFlexContribution = 10.0;
-      }
-    } else {
-      if (flex == 'stiff') {
-        skillFlexContribution = 20.0;
-      } else if (flex == 'medium') {
-        skillFlexContribution = 10.0;
-      } else {
-        skillFlexContribution = -10.0;
-      }
-    }
-
-    // 3. Physical / Wrist Strength vs Weight Class
-    final String weight = racket.weightClass.toUpperCase();
-    if (profile.hasLowStrength) {
-      if (weight == '5U') {
-        strengthWeightContribution = 20.0;
-      } else if (weight == '4U') {
-        strengthWeightContribution = 15.0;
-      } else {
-        strengthWeightContribution = -20.0;
-      }
-    } else {
-      if (weight == '3U' || weight == '4U') {
-        strengthWeightContribution = 20.0;
-      } else {
-        strengthWeightContribution = 5.0;
-      }
-    }
-
-    // 4. Playing Style vs Balance Category
-    final String style = profile.playingStyle.toLowerCase();
-    final String balance = racket.balanceCategory.toLowerCase();
-    if (style == 'attacking') {
-      if (balance == 'head heavy') {
-        styleBalanceContribution = 20.0;
-      } else if (balance == 'head light' || balance.contains('light')) {
-        styleBalanceContribution = -10.0;
-      } else {
-        styleBalanceContribution = 10.0;
-      }
-    } else if (style == 'defensive') {
-      if (balance == 'head light' || balance.contains('light')) {
-        styleBalanceContribution = 20.0;
-      } else if (balance == 'head heavy') {
-        styleBalanceContribution = -10.0;
-      } else {
-        styleBalanceContribution = 15.0;
-      }
-    } else {
-      if (balance == 'even balance' || balance == 'even') {
-        styleBalanceContribution = 20.0;
-      } else {
-        styleBalanceContribution = 10.0;
-      }
-    }
-
-    // 5. Match Format / Type
-    final String match = profile.matchType.toLowerCase();
-    if (match == 'doubles') {
-      if (balance == 'head light' || balance == 'even balance' || balance == 'even' || balance.contains('light')) {
-        matchTypeContribution = 20.0;
-      } else {
-        matchTypeContribution = 10.0;
-      }
-    } else if (match == 'singles') {
-      if (balance == 'head heavy' || balance == 'even balance' || balance == 'even') {
-        matchTypeContribution = 20.0;
-      } else {
-        matchTypeContribution = 10.0;
-      }
-    } else {
-      matchTypeContribution = 20.0;
-    }
-
-    return baseValue +
-        budgetContribution +
-        skillFlexContribution +
-        strengthWeightContribution +
-        styleBalanceContribution +
-        matchTypeContribution;
-  }
-
-  /// Builds a scored Racket instance with clamped rating and simulated SHAP explanation.
-  Racket _buildScoredRacket(Racket racket, UserProfile profile, double rawScore) {
-    const double baseValue = 50.0;
-
-    double budgetContribution = 0.0;
-    double skillFlexContribution = 0.0;
-    double strengthWeightContribution = 0.0;
-    double styleBalanceContribution = 0.0;
-    double matchTypeContribution = 0.0;
-
-    // Redo breakdown to format the reasons
     final String prefTier = profile.preferredBudgetTier.toLowerCase();
     final String rackTier = racket.priceTier.toLowerCase();
     String budgetReason = '';
@@ -375,31 +284,54 @@ class RecommendationService {
       matchReason = 'versatile specifications suit generic match formats';
     }
 
-    final int finalRating = rawScore.clamp(0.0, 100.0).round();
+    final double totalScore = baseValue +
+        budgetContribution +
+        skillFlexContribution +
+        strengthWeightContribution +
+        styleBalanceContribution +
+        matchTypeContribution;
 
-    // Construct Simulated SHAP feature attribution explanation
-    final List<String> attributions = [];
-    void addAttr(String featureName, double contribution, String reason) {
-      final String sign = contribution >= 0 ? '+' : '';
-      attributions.add(
-        '$featureName: $sign${contribution.toStringAsFixed(0)}% ($reason)',
-      );
-    }
-
-    addAttr('Budget Fit', budgetContribution, budgetReason);
-    addAttr('Skill vs Flexibility', skillFlexContribution, skillReason);
-    addAttr('Strength vs Weight', strengthWeightContribution, strengthReason);
-    addAttr('Style vs Balance', styleBalanceContribution, styleReason);
-    addAttr('Match Type Fit', matchTypeContribution, matchReason);
-
-    final String shapExplanation =
-        'SHAP explainable AI report: Base prediction is ${baseValue.toStringAsFixed(0)}%. '
-        'Attribution contributions: ${attributions.join("; ")}. '
-        'Total match compatibility: $finalRating%.';
-
-    return racket.copyWith(
-      matchRating: finalRating,
-      matchExplanation: shapExplanation,
+    return _CompatibilityDetails(
+      budgetContribution: budgetContribution,
+      budgetReason: budgetReason,
+      skillFlexContribution: skillFlexContribution,
+      skillReason: skillReason,
+      strengthWeightContribution: strengthWeightContribution,
+      strengthReason: strengthReason,
+      styleBalanceContribution: styleBalanceContribution,
+      styleReason: styleReason,
+      matchTypeContribution: matchTypeContribution,
+      matchReason: matchReason,
+      totalScore: totalScore,
     );
   }
 }
+
+class _CompatibilityDetails {
+  final double budgetContribution;
+  final String budgetReason;
+  final double skillFlexContribution;
+  final String skillReason;
+  final double strengthWeightContribution;
+  final String strengthReason;
+  final double styleBalanceContribution;
+  final String styleReason;
+  final double matchTypeContribution;
+  final String matchReason;
+  final double totalScore;
+
+  const _CompatibilityDetails({
+    required this.budgetContribution,
+    required this.budgetReason,
+    required this.skillFlexContribution,
+    required this.skillReason,
+    required this.strengthWeightContribution,
+    required this.strengthReason,
+    required this.styleBalanceContribution,
+    required this.styleReason,
+    required this.matchTypeContribution,
+    required this.matchReason,
+    required this.totalScore,
+  });
+}
+
