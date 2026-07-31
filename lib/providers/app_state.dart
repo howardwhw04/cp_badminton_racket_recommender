@@ -634,66 +634,8 @@ class AppState extends ChangeNotifier {
   List<MarketListing> _marketListings = [];
   bool _isLoadingMarket = false;
 
-  List<MarketListing> get marketplaceItems =>
-      _marketListings.isNotEmpty ? _marketListings : _fallbackMarketListings;
+  List<MarketListing> get marketplaceItems => _marketListings;
   bool get isLoadingMarket => _isLoadingMarket;
-
-  final List<MarketListing> _fallbackMarketListings = [
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Yonex Astrox 88D Pro",
-      brand: "Yonex",
-      priceMyr: 580.0,
-      imageUrl: "assets/images/racket_astrox.png",
-      itemCondition: "Used - Like New",
-      location: "Kuala Lumpur",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Victor P9200II TD",
-      brand: "Victor",
-      priceMyr: 290.0,
-      imageUrl: "assets/images/market_shoes.png",
-      itemCondition: "Used - Good",
-      location: "Subang Jaya",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Li-Ning Tour Bag",
-      brand: "Li-Ning",
-      priceMyr: 150.0,
-      imageUrl: "assets/images/market_bag.png",
-      itemCondition: "Well Maintained",
-      location: "Penang",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Li-Ning Tectonic 7",
-      brand: "Li-Ning",
-      priceMyr: 420.0,
-      imageUrl: "assets/images/racket_volts3.png",
-      itemCondition: "Minor Paint Chip",
-      location: "Johor Bahru",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "RSL Classic (10 tubes)",
-      brand: "Other",
-      priceMyr: 750.0,
-      imageUrl: "assets/images/racket_astrox.png",
-      itemCondition: "Brand New",
-      location: "Ipoh",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Stringing Service",
-      brand: "Other",
-      priceMyr: 35.0,
-      imageUrl: "assets/images/auth_bg.png",
-      itemCondition: "Professional",
-      location: "Cheras",
-    ),
-  ];
 
   Future<void> fetchMarketListings() async {
     _isLoadingMarket = true;
