@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:device_preview/device_preview.dart';
 import 'config/supabase_config.dart';
 import 'providers/app_state.dart';
 import 'screens/main_navigation_screen.dart';
@@ -13,7 +15,13 @@ void main() async {
     publishableKey: SupabaseConfig.anonKey,
   );
   runApp(
-    ChangeNotifierProvider(create: (_) => AppState(), child: const MyApp()),
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: const MyApp(),
+      ),
+    ),
   );
 }
 
@@ -23,7 +31,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AEROCORE',
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      title: 'RacketBase',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

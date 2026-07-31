@@ -94,15 +94,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isSelected = _currentIndex == index;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 70,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -151,13 +150,12 @@ class HomeDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<AppState>(context);
-    final recommended = state.recommendedRacket;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D1622),
       appBar: AppBar(
         title: const Text(
-          "AEROCORE DASHBOARD",
+          "RACKETBASE DASHBOARD",
           style: TextStyle(
             color: Color(0xFF00F5D4),
             fontFamily: 'Orbitron',
@@ -328,7 +326,10 @@ class HomeDashboard extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-                                Row(
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 4,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.symmetric(
@@ -353,7 +354,6 @@ class HomeDashboard extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
                                     Text(
                                       racket.priceTier,
                                       style: TextStyle(

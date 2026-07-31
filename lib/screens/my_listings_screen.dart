@@ -424,7 +424,7 @@ class MyListingsScreen extends StatelessWidget {
                                   sellerId: sellerId,
                                   title: titleController.text.isNotEmpty
                                       ? titleController.text
-                                      : "AEROCORE Custom Racket",
+                                      : "RacketBase Custom Racket",
                                   brand: selectedBrand,
                                   priceMyr: price,
                                   imageUrl: finalImageUrl,

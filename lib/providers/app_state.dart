@@ -527,133 +527,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  // Calculate compatibility dynamically (0 - 100)
-  Racket _calculateCompatibility(Racket racket) {
-    int score = 0;
-    List<String> matchingFactors = [];
 
-    // 1. Budget Tier Match (20 points)
-    if (racket.priceTier.toLowerCase() == _preferredBudgetTier.toLowerCase()) {
-      score += 20;
-      matchingFactors.add("fits your $_preferredBudgetTier budget tier");
-    } else {
-      final tiers = ['budget', 'mid-range', 'premium'];
-      final racketIdx = tiers.indexOf(racket.priceTier.toLowerCase());
-      final prefIdx = tiers.indexOf(_preferredBudgetTier.toLowerCase());
-      if (racketIdx != -1 && prefIdx != -1 && (racketIdx - prefIdx).abs() == 1) {
-        score += 10;
-      }
-    }
-
-    // 2. Skill Level vs Shaft Flexibility (20 points)
-    final skill = _selectedSkillLevelIndex;
-    final flex = racket.shaftFlexibility.toLowerCase();
-    if (skill == 0) { // Beginner
-      if (flex == 'flexible') {
-        score += 20;
-        matchingFactors.add("flexible shaft matches beginner requirements");
-      } else if (flex == 'medium') {
-        score += 15;
-      } else {
-        score += 5;
-      }
-    } else if (skill == 1) { // Intermediate
-      if (flex == 'medium') {
-        score += 20;
-        matchingFactors.add("medium shaft stiffness is ideal for club play");
-      } else if (flex == 'flexible' || flex == 'stiff') {
-        score += 15;
-      }
-    } else { // Advanced
-      if (flex == 'stiff') {
-        score += 20;
-        matchingFactors.add("stiff shaft offers clinical accuracy for advanced control");
-      } else if (flex == 'medium') {
-        score += 10;
-      }
-    }
-
-    // 3. Wrist/Physical Strength vs Weight (20 points)
-    final weight = racket.weightClass;
-    if (_hasLowStrength) {
-      if (weight == '5U') {
-        score += 20;
-        matchingFactors.add("ultra-lightweight class protects wrist strength");
-      } else if (weight == '4U') {
-        score += 15;
-        matchingFactors.add("forgiving 4U weight helps with lower arm strength");
-      } else {
-        score += 0;
-      }
-    } else {
-      if (weight == '3U' || weight == '4U') {
-        score += 20;
-        matchingFactors.add("optimal weight distribution for solid stability");
-      } else {
-        score += 10;
-      }
-    }
-
-    // 4. Playing Style vs Balance Category (20 points)
-    final style = _playingStyle.toLowerCase();
-    final balance = racket.balanceCategory.toLowerCase();
-    if (style == 'attacking') {
-      if (balance == 'head heavy') {
-        score += 20;
-        matchingFactors.add("head-heavy balance boosts smash power");
-      } else if (balance == 'even balance' || balance == 'even') {
-        score += 10;
-      }
-    } else if (style == 'defensive') {
-      if (balance == 'head light' || balance.contains('light')) {
-        score += 20;
-        matchingFactors.add("head-light setup provides swift defensive recovery");
-      } else if (balance == 'even balance' || balance == 'even') {
-        score += 15;
-      }
-    } else { // All-Rounder
-      if (balance == 'even balance' || balance == 'even') {
-        score += 20;
-        matchingFactors.add("even balance suits all-court gameplay");
-      } else {
-        score += 12;
-      }
-    }
-
-    // 5. Match Type / Speed (20 points)
-    final match = _matchType.toLowerCase();
-    if (match == 'doubles') {
-      if (balance == 'head light' || balance == 'even balance' || balance == 'even' || balance.contains('light')) {
-        score += 20;
-        matchingFactors.add("quick maneuverability is excellent for fast-paced doubles rallies");
-      } else {
-        score += 10;
-      }
-    } else if (match == 'singles') {
-      if (balance == 'head heavy' || balance == 'even balance' || balance == 'even') {
-        score += 20;
-        matchingFactors.add("solid frame control gives dominance in singles court coverage");
-      } else {
-        score += 10;
-      }
-    } else { // Both
-      score += 20;
-      matchingFactors.add("versatile framework adapts well to both singles and doubles");
-    }
-
-    // Generate dynamic explanation
-    String explanation = "This racket is rated at $score% compatibility. ";
-    if (matchingFactors.isNotEmpty) {
-      explanation += "Key factors: It ${matchingFactors.join(", and it ")}.";
-    } else {
-      explanation += racket.description.isNotEmpty ? racket.description : "Fits general recreation/club play styles.";
-    }
-
-    return racket.copyWith(
-      matchRating: score,
-      matchExplanation: explanation,
-    );
-  }
 
   UserProfile get userProfile => UserProfile(
         id: _supabase.auth.currentUser?.id ?? '',
@@ -800,8 +674,17 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> updateMarketListing(MarketListing listing) async {
+    debugPrint("updateMarketListing - listing.id: ${listing.id}, listing.sellerId: ${listing.sellerId}, currentUser: ${Supabase.instance.client.auth.currentUser?.id}");
     try {
-      final json = listing.toJson();
+      final json = {
+        'seller_id': listing.sellerId,
+        'title': listing.title,
+        'brand': listing.brand,
+        'price_myr': listing.priceMyr,
+        'item_condition': listing.itemCondition,
+        'location': listing.location,
+        'image_url': listing.imageUrl,
+      };
       final response = await _supabase
           .from('market_listings')
           .update(json)

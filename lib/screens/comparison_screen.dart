@@ -34,50 +34,32 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D1622),
+      appBar: AppBar(
+        title: const Text(
+          "TECHNICAL COMPARISON",
+          style: TextStyle(
+            color: Color(0xFF00F5D4),
+            fontFamily: 'Orbitron',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF0A0F18),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: Column(
           children: [
+            if (state.isLoadingRackets)
+              const LinearProgressIndicator(color: Color(0xFF00F5D4)),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header Text
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Technical Comparison",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Orbitron',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            "Analyze the core performance specs of your top selected gear side-by-side.",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontFamily: 'Inter',
-                              fontSize: 14,
-                              height: 1.4,
-                            ),
-                          ),
-                          if (state.isLoadingRackets) ...[
-                            const SizedBox(height: 16),
-                            const Center(
-                              child: LinearProgressIndicator(color: Color(0xFF00F5D4)),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
 
                     if (allRackets.isEmpty && !state.isLoadingRackets)
                       Center(

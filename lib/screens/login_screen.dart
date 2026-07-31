@@ -186,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Email Field
                     CustomInput(
                       label: "Email",
-                      placeholder: "athlete@aerocore.com",
+                      placeholder: "athlete@racketbase.com",
                       prefixIcon: Icons.mail_outline,
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
