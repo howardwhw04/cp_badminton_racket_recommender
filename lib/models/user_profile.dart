@@ -36,7 +36,8 @@ class UserProfile {
       playingStyle: json['playing_style'] as String? ?? 'All-Rounder',
       hasLowStrength: json['has_low_strength'] as bool? ?? false,
       matchType: json['match_type'] as String? ?? 'Singles',
-      preferredBudgetTier: json['preferred_budget_tier'] as String? ?? 'Mid-Range',
+      preferredBudgetTier:
+          json['preferred_budget_tier'] as String? ?? 'Mid-Range',
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String)
           : DateTime.now(),

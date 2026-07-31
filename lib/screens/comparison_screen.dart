@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import '../models/racket.dart';
-import '../widgets/custom_button.dart';
 
 class ComparisonScreen extends StatefulWidget {
   const ComparisonScreen({super.key});
@@ -60,11 +59,13 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     if (allRackets.isEmpty && !state.isLoadingRackets)
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 60.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24.0,
+                            vertical: 60.0,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -159,11 +160,15 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                                     Positioned.fill(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                           gradient: LinearGradient(
                                             colors: [
                                               Colors.transparent,
-                                              Colors.black.withValues(alpha: 0.8),
+                                              Colors.black.withValues(
+                                                alpha: 0.8,
+                                              ),
                                             ],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
@@ -187,7 +192,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                                                   0xFF00F5D4,
                                                 ).withValues(alpha: 0.2)
                                               : Colors.black54,
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
                                         child: Text(
                                           racket.name,
@@ -230,7 +237,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                                             color: Colors.black54,
                                             shape: BoxShape.circle,
                                             border: Border.all(
-                                              color: Colors.white.withValues(alpha: 0.15),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.15,
+                                              ),
                                               width: 1,
                                             ),
                                           ),
@@ -370,9 +379,7 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
         decoration: BoxDecoration(
           color: const Color(0xFF111C28),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.06),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -704,7 +711,9 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Text(
-          racket.matchExplanation.isNotEmpty ? racket.matchExplanation : racket.description,
+          racket.matchExplanation.isNotEmpty
+              ? racket.matchExplanation
+              : racket.description,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.7),
             fontFamily: 'Inter',

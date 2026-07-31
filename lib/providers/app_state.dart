@@ -20,7 +20,9 @@ class AppState extends ChangeNotifier {
     if (!_isLoggedIn) return 'Anonymous Player';
     final user = _supabase.auth.currentUser;
     final metadata = user?.userMetadata;
-    return metadata?['display_name'] as String? ?? metadata?['full_name'] as String? ?? 'Elite Athlete';
+    return metadata?['display_name'] as String? ??
+        metadata?['full_name'] as String? ??
+        'Elite Athlete';
   }
 
   // User Profile Statistics (database backed)
@@ -35,7 +37,8 @@ class AppState extends ChangeNotifier {
   int get control => _control;
 
   // User Profile Attributes (Quiz responses)
-  int _selectedSkillLevelIndex = 1; // 0 = Beginner, 1 = Intermediate, 2 = Advanced
+  int _selectedSkillLevelIndex =
+      1; // 0 = Beginner, 1 = Intermediate, 2 = Advanced
   String _playingStyle = 'All-Rounder';
   bool _hasLowStrength = false;
   String _matchType = 'Singles';
@@ -98,7 +101,8 @@ class AppState extends ChangeNotifier {
         _playingStyle = data['playing_style'] as String? ?? 'All-Rounder';
         _hasLowStrength = data['has_low_strength'] as bool? ?? false;
         _matchType = data['match_type'] as String? ?? 'Singles';
-        _preferredBudgetTier = data['preferred_budget_tier'] as String? ?? 'Mid-Range';
+        _preferredBudgetTier =
+            data['preferred_budget_tier'] as String? ?? 'Mid-Range';
         notifyListeners();
       }
     } catch (e) {
@@ -169,11 +173,7 @@ class AppState extends ChangeNotifier {
 
     if (displayName != null && _isLoggedIn) {
       await _supabase.auth.updateUser(
-        UserAttributes(
-          data: {
-            'display_name': displayName,
-          },
-        ),
+        UserAttributes(data: {'display_name': displayName}),
       );
     }
 
@@ -196,17 +196,11 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    await _supabase.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+    await _supabase.auth.signInWithPassword(email: email, password: password);
   }
 
   Future<void> signUp(String email, String password) async {
-    await _supabase.auth.signUp(
-      email: email,
-      password: password,
-    );
+    await _supabase.auth.signUp(email: email, password: password);
   }
 
   Future<void> logout() async {
@@ -243,7 +237,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 689.00,
       priceTier: 'Premium',
       assetImagePath: 'assets/images/astrox_99_pro.png',
-      description: 'Engineered for explosive rear-court power. Features the 2G-Namd Flex Force graphite and Rotational Generator System for heavy, steep smashes and continuous attacking play.',
+      description:
+          'Engineered for explosive rear-court power. Features the 2G-Namd Flex Force graphite and Rotational Generator System for heavy, steep smashes and continuous attacking play.',
     ),
     const Racket(
       brand: 'Yonex',
@@ -256,7 +251,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 729.00,
       priceTier: 'Premium',
       assetImagePath: 'assets/images/astrox_100zz.png',
-      description: 'The flagship attacking racket built with a Hyper Slim Shaft and Namd graphite. Designed for advanced players seeking maximum smash velocity and hyper-fast shot recovery.',
+      description:
+          'The flagship attacking racket built with a Hyper Slim Shaft and Namd graphite. Designed for advanced players seeking maximum smash velocity and hyper-fast shot recovery.',
     ),
     const Racket(
       brand: 'Yonex',
@@ -269,7 +265,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 380.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/nanoflare_800_game.png',
-      description: 'A speed-oriented racket engineered with a Sonic Flare System. Offers lightning-fast swing speeds, ideal for rapid drive exchanges and quick defensive counter-attacks.',
+      description:
+          'A speed-oriented racket engineered with a Sonic Flare System. Offers lightning-fast swing speeds, ideal for rapid drive exchanges and quick defensive counter-attacks.',
     ),
     const Racket(
       brand: 'Yonex',
@@ -282,7 +279,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 189.00,
       priceTier: 'Budget',
       assetImagePath: 'assets/images/arcsaber_11_play.png',
-      description: 'An all-around control racket designed to hold the shuttlecock longer on the string bed. Perfect for club players seeking high accuracy, stability, and comfortable power generation.',
+      description:
+          'An all-around control racket designed to hold the shuttlecock longer on the string bed. Perfect for club players seeking high accuracy, stability, and comfortable power generation.',
     ),
     const Racket(
       brand: 'Yonex',
@@ -295,7 +293,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 169.00,
       priceTier: 'Budget',
       assetImagePath: 'assets/images/nanoflare_170.png',
-      description: 'An ultra-lightweight, head-light racket designed for effortless maneuvering and swift reactions at the net. Highly recommended for developing players and junior athletes.',
+      description:
+          'An ultra-lightweight, head-light racket designed for effortless maneuvering and swift reactions at the net. Highly recommended for developing players and junior athletes.',
     ),
 
     // LI-NING MODELS
@@ -310,7 +309,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 750.00,
       priceTier: 'Premium',
       assetImagePath: 'assets/images/axforce_90.png',
-      description: 'Built with TB Nano carbon fiber and a slim 6.2mm hard flexible shaft. Delivers concentrated power transmission for dominant single players and backcourt smashers.',
+      description:
+          'Built with TB Nano carbon fiber and a slim 6.2mm hard flexible shaft. Delivers concentrated power transmission for dominant single players and backcourt smashers.',
     ),
     const Racket(
       brand: 'Li-Ning',
@@ -323,7 +323,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 480.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/axforce_70.png',
-      description: 'Features a box wing frame layout to maximize hitting power while maintaining smooth maneuverability. Great for aggressive intermediate players looking for accessible head-heavy power.',
+      description:
+          'Features a box wing frame layout to maximize hitting power while maintaining smooth maneuverability. Great for aggressive intermediate players looking for accessible head-heavy power.',
     ),
     const Racket(
       brand: 'Li-Ning',
@@ -336,7 +337,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 420.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/halbertec_6000.png',
-      description: 'Designed with a frame system that balances elasticity and control. Excellent for tactical players who rely on precise shuttle placement, drop shots, and consistent rallies.',
+      description:
+          'Designed with a frame system that balances elasticity and control. Excellent for tactical players who rely on precise shuttle placement, drop shots, and consistent rallies.',
     ),
     const Racket(
       brand: 'Li-Ning',
@@ -349,7 +351,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 199.00,
       priceTier: 'Budget',
       assetImagePath: 'assets/images/bladex_200.png',
-      description: 'Focuses on rapid swing speeds and defensive agility. The flexible shaft assists developing players in generating court clearing depth with minimal arm strain.',
+      description:
+          'Focuses on rapid swing speeds and defensive agility. The flexible shaft assists developing players in generating court clearing depth with minimal arm strain.',
     ),
     const Racket(
       brand: 'Li-Ning',
@@ -362,7 +365,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 289.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/windstorm_72.png',
-      description: 'Super lightweight yet head-heavy. Designed specifically for fast doubles play, offering incredible reaction speed without forfeiting overhead smash power.',
+      description:
+          'Super lightweight yet head-heavy. Designed specifically for fast doubles play, offering incredible reaction speed without forfeiting overhead smash power.',
     ),
 
     // VICTOR MODELS
@@ -377,7 +381,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 650.00,
       priceTier: 'Premium',
       assetImagePath: 'assets/images/ryuga_2.png',
-      description: 'Equipped with WES 2.0 technology and a Free Core synthetic handle. Engineered for aggressive offensive play, delivering whipping smash angles and solid feel at impact.',
+      description:
+          'Equipped with WES 2.0 technology and a Free Core synthetic handle. Engineered for aggressive offensive play, delivering whipping smash angles and solid feel at impact.',
     ),
     const Racket(
       brand: 'Victor',
@@ -390,7 +395,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 590.00,
       priceTier: 'Premium',
       assetImagePath: 'assets/images/auraspeed_90k.png',
-      description: 'Designed for high-speed flat drives and push attacks. Incorporates a Compound-Sword frame to reduce air resistance and deliver immediate rebound velocity.',
+      description:
+          'Designed for high-speed flat drives and push attacks. Incorporates a Compound-Sword frame to reduce air resistance and deliver immediate rebound velocity.',
     ),
     const Racket(
       brand: 'Victor',
@@ -403,7 +409,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 520.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/drivex_9x.png',
-      description: 'A versatile all-around racket utilizing the Dynamic-Sword frame structure. Delivers smooth handling, excellent stability on touch shots, and balanced attacking power.',
+      description:
+          'A versatile all-around racket utilizing the Dynamic-Sword frame structure. Delivers smooth handling, excellent stability on touch shots, and balanced attacking power.',
     ),
     const Racket(
       brand: 'Victor',
@@ -416,7 +423,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 169.00,
       priceTier: 'Budget',
       assetImagePath: 'assets/images/tk_hmr.png',
-      description: 'An entry-level power racket built with Power Box technology. Features a flexible shaft to help beginners produce high clears and smashes with less effort.',
+      description:
+          'An entry-level power racket built with Power Box technology. Features a flexible shaft to help beginners produce high clears and smashes with less effort.',
     ),
     const Racket(
       brand: 'Victor',
@@ -429,7 +437,8 @@ class AppState extends ChangeNotifier {
       priceMyr: 210.00,
       priceTier: 'Mid-Range',
       assetImagePath: 'assets/images/auraspeed_30h.png',
-      description: 'High-tension durable speed racket capable of supporting up to 31 lbs. Great for fast-paced doubles defense and rapid net interceptions.',
+      description:
+          'High-tension durable speed racket capable of supporting up to 31 lbs. Great for fast-paced doubles defense and rapid net interceptions.',
     ),
   ];
 
@@ -440,7 +449,9 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Racket>> _filterRacketsWithExistingAssets(List<Racket> inputList) async {
+  Future<List<Racket>> _filterRacketsWithExistingAssets(
+    List<Racket> inputList,
+  ) async {
     final List<Racket> result = [];
     for (final racket in inputList) {
       final path = racket.imagePath;
@@ -510,13 +521,21 @@ class AppState extends ChangeNotifier {
       final List<dynamic> data = await _supabase.from('rackets').select();
       List<Racket> fetchedRackets = [];
       if (data.isNotEmpty) {
-        fetchedRackets = data.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
+        fetchedRackets = data
+            .map((json) => Racket.fromJson(json as Map<String, dynamic>))
+            .toList();
       } else {
-        debugPrint("Supabase rackets table is empty. Seeding fallback rackets...");
+        debugPrint(
+          "Supabase rackets table is empty. Seeding fallback rackets...",
+        );
         final racketsJson = _rackets.map((r) => r.toJson()).toList();
         await _supabase.from('rackets').insert(racketsJson);
-        final List<dynamic> refetched = await _supabase.from('rackets').select();
-        fetchedRackets = refetched.map((json) => Racket.fromJson(json as Map<String, dynamic>)).toList();
+        final List<dynamic> refetched = await _supabase
+            .from('rackets')
+            .select();
+        fetchedRackets = refetched
+            .map((json) => Racket.fromJson(json as Map<String, dynamic>))
+            .toList();
       }
       _dbRackets = await _filterRacketsWithExistingAssets(fetchedRackets);
     } catch (e) {
@@ -527,36 +546,42 @@ class AppState extends ChangeNotifier {
     }
   }
 
-
-
   UserProfile get userProfile => UserProfile(
-        id: _supabase.auth.currentUser?.id ?? '',
-        skillLevel: _selectedSkillLevelIndex,
-        matches: _matches,
-        winRate: _winRate,
-        powerIndex: _powerIndex,
-        control: _control,
-        playingStyle: _playingStyle,
-        hasLowStrength: _hasLowStrength,
-        matchType: _matchType,
-        preferredBudgetTier: _preferredBudgetTier,
-        updatedAt: DateTime.now(),
-      );
+    id: _supabase.auth.currentUser?.id ?? '',
+    skillLevel: _selectedSkillLevelIndex,
+    matches: _matches,
+    winRate: _winRate,
+    powerIndex: _powerIndex,
+    control: _control,
+    playingStyle: _playingStyle,
+    hasLowStrength: _hasLowStrength,
+    matchType: _matchType,
+    preferredBudgetTier: _preferredBudgetTier,
+    updatedAt: DateTime.now(),
+  );
 
   List<Racket> get rackets {
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
-        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
+        : (_filteredFallbackRackets.isNotEmpty
+              ? _filteredFallbackRackets
+              : _rackets);
     final service = RecommendationService();
-    return list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
+    return list
+        .map((racket) => service.scoreRacket(racket, userProfile))
+        .toList();
   }
 
   List<Racket> get dbRackets {
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
-        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
+        : (_filteredFallbackRackets.isNotEmpty
+              ? _filteredFallbackRackets
+              : _rackets);
     final service = RecommendationService();
-    return list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
+    return list
+        .map((racket) => service.scoreRacket(racket, userProfile))
+        .toList();
   }
 
   // Comparison State
@@ -579,69 +604,38 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setComparisonFromRecommended() {
+    final allList = _dbRackets.isNotEmpty
+        ? _dbRackets
+        : (_filteredFallbackRackets.isNotEmpty
+              ? _filteredFallbackRackets
+              : _rackets);
+    final recommended = recommendedRackets;
+
+    _comparedRacketIndices.clear();
+    for (final rec in recommended) {
+      final idx = allList.indexWhere((r) => r.name == rec.name);
+      if (idx != -1) {
+        _comparedRacketIndices.add(idx);
+      }
+    }
+    // Limit to max 3 compared rackets for the side-by-side comparison layout
+    if (_comparedRacketIndices.length > 3) {
+      _comparedRacketIndices.removeRange(3, _comparedRacketIndices.length);
+    }
+    // Safety fallback
+    if (_comparedRacketIndices.isEmpty && allList.isNotEmpty) {
+      _comparedRacketIndices.add(0);
+    }
+    notifyListeners();
+  }
+
   // Marketplace State
   List<MarketListing> _marketListings = [];
   bool _isLoadingMarket = false;
 
-  List<MarketListing> get marketplaceItems => _marketListings.isNotEmpty ? _marketListings : _fallbackMarketListings;
+  List<MarketListing> get marketplaceItems => _marketListings;
   bool get isLoadingMarket => _isLoadingMarket;
-
-  final List<MarketListing> _fallbackMarketListings = [
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Yonex Astrox 88D Pro",
-      brand: "Yonex",
-      priceMyr: 580.0,
-      imageUrl: "assets/images/racket_astrox.png",
-      itemCondition: "Used - Like New",
-      location: "Kuala Lumpur",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Victor P9200II TD",
-      brand: "Victor",
-      priceMyr: 290.0,
-      imageUrl: "assets/images/market_shoes.png",
-      itemCondition: "Used - Good",
-      location: "Subang Jaya",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Li-Ning Tour Bag",
-      brand: "Li-Ning",
-      priceMyr: 150.0,
-      imageUrl: "assets/images/market_bag.png",
-      itemCondition: "Well Maintained",
-      location: "Penang",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Li-Ning Tectonic 7",
-      brand: "Li-Ning",
-      priceMyr: 420.0,
-      imageUrl: "assets/images/racket_volts3.png",
-      itemCondition: "Minor Paint Chip",
-      location: "Johor Bahru",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "RSL Classic (10 tubes)",
-      brand: "Other",
-      priceMyr: 750.0,
-      imageUrl: "assets/images/racket_astrox.png",
-      itemCondition: "Brand New",
-      location: "Ipoh",
-    ),
-    const MarketListing(
-      sellerId: '00000000-0000-0000-0000-000000000000',
-      title: "Stringing Service",
-      brand: "Other",
-      priceMyr: 35.0,
-      imageUrl: "assets/images/auth_bg.png",
-      itemCondition: "Professional",
-      location: "Cheras",
-    ),
-  ];
 
   Future<void> fetchMarketListings() async {
     _isLoadingMarket = true;
@@ -651,7 +645,9 @@ class AppState extends ChangeNotifier {
           .from('market_listings')
           .select()
           .order('created_at', ascending: false);
-      _marketListings = data.map((json) => MarketListing.fromJson(json as Map<String, dynamic>)).toList();
+      _marketListings = data
+          .map((json) => MarketListing.fromJson(json as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       debugPrint("Error fetching market listings: $e");
     } finally {
@@ -663,7 +659,11 @@ class AppState extends ChangeNotifier {
   Future<void> addMarketListing(MarketListing listing) async {
     try {
       final json = listing.toJson();
-      final response = await _supabase.from('market_listings').insert(json).select().single();
+      final response = await _supabase
+          .from('market_listings')
+          .insert(json)
+          .select()
+          .single();
       final created = MarketListing.fromJson(response);
       _marketListings.insert(0, created);
       notifyListeners();
@@ -674,7 +674,9 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> updateMarketListing(MarketListing listing) async {
-    debugPrint("updateMarketListing - listing.id: ${listing.id}, listing.sellerId: ${listing.sellerId}, currentUser: ${Supabase.instance.client.auth.currentUser?.id}");
+    debugPrint(
+      "updateMarketListing - listing.id: ${listing.id}, listing.sellerId: ${listing.sellerId}, currentUser: ${Supabase.instance.client.auth.currentUser?.id}",
+    );
     try {
       final json = {
         'seller_id': listing.sellerId,
@@ -726,10 +728,17 @@ class AppState extends ChangeNotifier {
     final service = RecommendationService();
     final list = _dbRackets.isNotEmpty
         ? _dbRackets
-        : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
-    final recommendationsMap = service.getRecommendationsFromList(userProfile, list);
+        : (_filteredFallbackRackets.isNotEmpty
+              ? _filteredFallbackRackets
+              : _rackets);
+    final recommendationsMap = service.getRecommendationsFromList(
+      userProfile,
+      list,
+    );
     if (recommendationsMap.isEmpty) {
-      final scoredList = list.map((racket) => service.scoreRacket(racket, userProfile)).toList();
+      final scoredList = list
+          .map((racket) => service.scoreRacket(racket, userProfile))
+          .toList();
       scoredList.sort((a, b) => b.matchRating.compareTo(a.matchRating));
       return scoredList.take(3).toList();
     }
@@ -743,11 +752,12 @@ class AppState extends ChangeNotifier {
     if (list.isEmpty) {
       final listRaw = _dbRackets.isNotEmpty
           ? _dbRackets
-          : (_filteredFallbackRackets.isNotEmpty ? _filteredFallbackRackets : _rackets);
+          : (_filteredFallbackRackets.isNotEmpty
+                ? _filteredFallbackRackets
+                : _rackets);
       final service = RecommendationService();
       return service.scoreRacket(listRaw[0], userProfile);
     }
     return list.first;
   }
 }
-
