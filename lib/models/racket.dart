@@ -42,7 +42,8 @@ class Racket {
   String get balanceText => balanceCategory;
   String get flex => shaftFlexibility;
   String get imagePath {
-    if (assetImagePath.startsWith('http://') || assetImagePath.startsWith('https://')) {
+    if (assetImagePath.startsWith('http://') ||
+        assetImagePath.startsWith('https://')) {
       return assetImagePath;
     }
     if (assetImagePath.startsWith('assets/images/')) {
@@ -63,7 +64,9 @@ class Racket {
       shaftFlexibility: json['shaft_flexibility'] as String? ?? 'Medium',
       priceMyr: (json['price_myr'] as num?)?.toDouble() ?? 0.0,
       priceTier: json['price_tier'] as String? ?? 'Mid-Range',
-      assetImagePath: json['asset_image_path'] as String? ?? 'assets/images/racket_volts3.png',
+      assetImagePath:
+          json['asset_image_path'] as String? ??
+          'assets/images/racket_volts3.png',
       description: json['description'] as String? ?? '',
     );
   }
@@ -119,4 +122,3 @@ class Racket {
     );
   }
 }
-

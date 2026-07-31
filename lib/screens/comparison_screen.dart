@@ -216,6 +216,32 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                                           size: 16,
                                         ),
                                       ),
+                                    // Zoom/View bigger size button
+                                    Positioned(
+                                      top: 6,
+                                      left: 6,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _showBiggerImage(context, racket);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: Colors.white.withValues(alpha: 0.15),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.zoom_in,
+                                            color: Color(0xFF00F5D4),
+                                            size: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -240,6 +266,13 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                           ),
                         )
                       else ...[
+                        // RACKET VISUALS section
+                        _buildSectionTitle("Racket Visuals"),
+                        _buildRow(
+                          comparedRackets,
+                          (racket) => _buildImageCell(context, racket),
+                        ),
+
                         // BRAND IDENTITY section
                         _buildSectionTitle("Brand Identity"),
                         _buildRow(
@@ -290,29 +323,6 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
                 ),
               ),
             ),
-
-            // Large full-width sticky footer
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: CustomButton(
-                text: "SELECT PRIMARY GEAR",
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: const Color(0xFF111C28),
-                      content: Text(
-                        "Primary gear locked successfully!",
-                        style: TextStyle(
-                          color: const Color(0xFF00F5D4),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
@@ -347,6 +357,176 @@ class _ComparisonScreenState extends State<ComparisonScreen> {
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  // Visual cell builder for racket image with tap-to-zoom
+  Widget _buildImageCell(BuildContext context, Racket racket) {
+    return GestureDetector(
+      onTap: () => _showBiggerImage(context, racket),
+      child: Container(
+        height: 140,
+        decoration: BoxDecoration(
+          color: const Color(0xFF111C28),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.06),
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  racket.imagePath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.black38,
+                    child: const Icon(Icons.image, color: Colors.white24),
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.6),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ),
+              // Fullscreen zoom indicator icon
+              Positioned(
+                bottom: 8,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.fullscreen,
+                    color: Color(0xFF00F5D4),
+                    size: 16,
+                  ),
+                ),
+              ),
+              // Racket brand & name overlay
+              Positioned(
+                bottom: 8,
+                left: 8,
+                right: 28,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      racket.brand.toUpperCase(),
+                      style: TextStyle(
+                        color: const Color(0xFF00F5D4).withValues(alpha: 0.8),
+                        fontFamily: 'Orbitron',
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      racket.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Orbitron',
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Interactive full-screen dialog to view the image in larger size with pinch-to-zoom support
+  void _showBiggerImage(BuildContext context, Racket racket) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: const Color(0xFF111C28),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: const Color(0xFF00F5D4).withValues(alpha: 0.5),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                racket.name.toUpperCase(),
+                style: const TextStyle(
+                  fontFamily: 'Orbitron',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF00F5D4),
+                ),
+              ),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: InteractiveViewer(
+                  panEnabled: true,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: Image.asset(
+                    racket.imagePath,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 200,
+                      color: Colors.black38,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.broken_image,
+                        color: Colors.white24,
+                        size: 64,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
