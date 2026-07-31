@@ -120,7 +120,7 @@ class _QuizScreenState extends State<QuizScreen> {
       backgroundColor: const Color(0xFF0D1622),
       appBar: AppBar(
         title: const Text(
-          "AEROCORE CALIBRATION",
+          "RACKETBASE CALIBRATION",
           style: TextStyle(
             color: Color(0xFF00F5D4),
             fontFamily: 'Orbitron',

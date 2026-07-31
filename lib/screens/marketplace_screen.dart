@@ -480,7 +480,7 @@ class MarketplaceScreen extends StatelessWidget {
                                   sellerId: sellerId,
                                   title: titleController.text.isNotEmpty
                                       ? titleController.text
-                                      : "AEROCORE Custom Racket",
+                                      : "RacketBase Custom Racket",
                                   brand: selectedBrand,
                                   priceMyr: price,
                                   imageUrl: finalImageUrl,
@@ -817,30 +817,17 @@ class MarketplaceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF0D1622),
       appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Community Market",
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Orbitron',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 2),
-            Text(
-              "Active listings in Malaysia",
-              style: TextStyle(
-                color: Colors.grey,
-                fontFamily: 'Inter',
-                fontSize: 12,
-              ),
-            ),
-          ],
+        title: const Text(
+          "COMMUNITY MARKET",
+          style: TextStyle(
+            color: Color(0xFF00F5D4),
+            fontFamily: 'Orbitron',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: const Color(0xFF0D1622),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF0A0F18),
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [

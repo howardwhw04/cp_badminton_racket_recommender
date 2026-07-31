@@ -1,6 +1,6 @@
 {
-    "name": "badmimton_racket_recommender",
-    "short_name": "badmimton_racket_recommender",
+    "name": "RacketBase",
+    "short_name": "RacketBase",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

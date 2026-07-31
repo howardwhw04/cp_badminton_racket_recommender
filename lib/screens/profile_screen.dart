@@ -75,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    state.isLoggedIn ? state.email : "guest@aerocore.com",
+                    state.isLoggedIn ? state.email : "guest@racketbase.com",
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.5),
                       fontFamily: 'Inter',

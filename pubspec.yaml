@@ -38,6 +38,7 @@ dependencies:
   provider: ^6.1.5+1
   supabase_flutter: ^2.16.0
   image_picker: ^1.1.2
+  device_preview: ^1.2.0
 
 dev_dependencies:
   flutter_test:

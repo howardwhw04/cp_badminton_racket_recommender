@@ -40,6 +40,6 @@ void main() {
     expect(find.text('ELITE PRECISION'), findsOneWidget);
     
     // Verify that the home dashboard (e.g. welcome card text) is not displayed
-    expect(find.text('AEROCORE DASHBOARD'), findsNothing);
+    expect(find.text('RACKETBASE DASHBOARD'), findsNothing);
   });
 }
