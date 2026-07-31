@@ -65,11 +65,13 @@ class _QuizScreenState extends State<QuizScreen> {
                 children: [
                   Icon(Icons.check_circle, color: Color(0xFF00F5D4)),
                   SizedBox(width: 12),
-                  Text(
-                    "Calibration successful! Recalibrating matching engine...",
-                    style: TextStyle(
-                      color: Color(0xFF00F5D4),
-                      fontFamily: 'Inter',
+                  Expanded(
+                    child: Text(
+                      "Calibration successful! Recalibrating matching engine...",
+                      style: TextStyle(
+                        color: Color(0xFF00F5D4),
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
                 ],

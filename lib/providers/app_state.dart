@@ -674,8 +674,17 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> updateMarketListing(MarketListing listing) async {
+    debugPrint("updateMarketListing - listing.id: ${listing.id}, listing.sellerId: ${listing.sellerId}, currentUser: ${Supabase.instance.client.auth.currentUser?.id}");
     try {
-      final json = listing.toJson();
+      final json = {
+        'seller_id': listing.sellerId,
+        'title': listing.title,
+        'brand': listing.brand,
+        'price_myr': listing.priceMyr,
+        'item_condition': listing.itemCondition,
+        'location': listing.location,
+        'image_url': listing.imageUrl,
+      };
       final response = await _supabase
           .from('market_listings')
           .update(json)
