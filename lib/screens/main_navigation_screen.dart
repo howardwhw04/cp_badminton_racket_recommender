@@ -185,9 +185,9 @@ class HomeDashboard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Welcome Back, Athlete",
-                    style: TextStyle(
+                  Text(
+                    "Welcome Back, ${state.displayName}",
+                    style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Orbitron',
                       fontSize: 20,
