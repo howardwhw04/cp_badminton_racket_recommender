@@ -19,7 +19,6 @@ class MarketplaceScreen extends StatelessWidget {
     final durationController = TextEditingController(text: "3 Months Used");
     String selectedCategory = "Racquets";
     String selectedBrand = "Yonex";
-    bool isElite = false;
     XFile? selectedImage;
     Uint8List? selectedImageBytes;
     bool isUploading = false;
@@ -381,30 +380,6 @@ class MarketplaceScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Elite Tag Switch
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Mark as Premium (ELITE tag)",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontFamily: 'Inter',
-                            fontSize: 14,
-                          ),
-                        ),
-                        Switch(
-                          value: isElite,
-                          activeThumbColor: const Color(0xFF00F5D4),
-                          onChanged: (val) {
-                            setModalState(() {
-                              isElite = val;
-                            });
-                          },
                         ),
                       ],
                     ),
