@@ -528,14 +528,26 @@ class AppState extends ChangeNotifier {
         debugPrint(
           "Supabase rackets table is empty. Seeding fallback rackets...",
         );
-        final racketsJson = _rackets.map((r) => r.toJson()).toList();
-        await _supabase.from('rackets').insert(racketsJson);
-        final List<dynamic> refetched = await _supabase
-            .from('rackets')
-            .select();
-        fetchedRackets = refetched
-            .map((json) => Racket.fromJson(json as Map<String, dynamic>))
-            .toList();
+        try {
+          final racketsJson = _rackets.map((r) => r.toJson()).toList();
+          await _supabase.from('rackets').insert(racketsJson);
+          final List<dynamic> refetched = await _supabase
+              .from('rackets')
+              .select();
+          fetchedRackets = refetched
+              .map((json) => Racket.fromJson(json as Map<String, dynamic>))
+              .toList();
+        } on PostgrestException catch (e) {
+          if (e.code == '42501') {
+            debugPrint("Info: Cannot seed rackets table due to RLS (expected for unauthenticated users). Using local fallback rackets.");
+          } else {
+            debugPrint("Failed to seed rackets: $e. Using local fallback rackets.");
+          }
+          fetchedRackets = List.from(_rackets);
+        } catch (e) {
+          debugPrint("Failed to seed rackets: $e. Using local fallback rackets.");
+          fetchedRackets = List.from(_rackets);
+        }
       }
       _dbRackets = await _filterRacketsWithExistingAssets(fetchedRackets);
     } catch (e) {
