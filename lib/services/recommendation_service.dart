@@ -45,7 +45,8 @@ class RecommendationService {
     UserProfile profile,
     List<Racket> rackets,
   ) {
-    // 1. Deterministic KBS filter: filter out stiff shafts if has_low_strength or skill_level == Beginner (0) is true.
+    // 1. Deterministic KBS filter: filter out stiff shafts 
+    //if has_low_strength or skill_level == Beginner (0) is true.
     final bool isBeginnerOrLowStrength =
         profile.hasLowStrength || profile.skillLevel == 0;
 
