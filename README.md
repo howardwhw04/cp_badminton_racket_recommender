@@ -4,17 +4,6 @@
 
 ---
 
-### Academic Context
-**Capstone Project** 
-*Bachelor of Software Engineering (Hons)*  
-*School of Computing and Artificial Intelligence, Sunway University*  
-**Author:** [Your Name]  
-**Student ID:** [Your Student ID]  
-**Supervisor:** [Supervisor Name]  
-**Semester:** [Semester/Year]
-
----
-
 ## 🏸 Problem & Solution
 
 **The Problem:** Consumers often struggle to choose badminton racquets due to technical jargon and opaque "black box" recommendation scores. Mismatched gear—such as using a stiff shaft when you are a beginner or lack arm strength—can cause physical injury and hinder skill progression.
